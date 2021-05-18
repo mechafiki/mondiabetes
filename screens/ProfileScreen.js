@@ -1,11 +1,22 @@
-import {  StyleSheet, Text, View, Button } from 'react-native';
+import {  StyleSheet, Text, View} from 'react-native';
 import * as React from 'react';
+import {auth} from '../firebase';
+import { Button} from 'react-native-elements';
 
 
 export function ProfileScreen({ navigation }){
+
+    const logout = () => {
+        auth
+        .signOut()
+    };
+
+
     return(
         <View style={styles.container}>
-            <Text>Profile</Text>
+            <Text style={{marginBottom:30}}>Profile</Text>
+            <Button title="Déconnexion"
+            onPress={logout} />
         </View>
     );
 }

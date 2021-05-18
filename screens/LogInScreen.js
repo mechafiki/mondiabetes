@@ -93,7 +93,7 @@ export function LogInScreen({ navigation }) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
-   /* React.useEffect(() => {
+    React.useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
           if(authUser){
               navigation.replace('Home');
@@ -102,7 +102,7 @@ export function LogInScreen({ navigation }) {
 
         return unsubscribe;
 
-    }, []);*/
+    }, []);
 
     const signin = () => {
       auth

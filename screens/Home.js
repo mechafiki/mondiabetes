@@ -1,7 +1,6 @@
 import {  StyleSheet, Text, View,Image, TouchableOpacity } from 'react-native';
 import * as React from 'react';
 import {auth, db} from '../firebase';
-//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { DashboardScreen} from '../screens/DashboardScreen';
 import { ProfileScreen} from '../screens/ProfileScreen';
@@ -10,9 +9,7 @@ import { SearchScreen} from '../screens/SearchScreen';
 
 export function Home({ navigation}){
 
-    //const Tab = createBottomTabNavigator();
     const Tab = createMaterialBottomTabNavigator();
-
 
     React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
@@ -24,19 +21,12 @@ export function Home({ navigation}){
     return unsubscribe;
 
 }, []);
-  
-   /* const logout = () => {
-      auth
-      .signOut()
-      .then(() => console.log('User signed out!'));
-    };*/
 
     return(
         <Tab.Navigator
           initialRouteName='Dashboard'
           tabBarOptions={{
             showLabel: false,
-          // style:{ ...styles.tabStyle }
           }}
 
         >
