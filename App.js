@@ -1,13 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet} from 'react-native';
+import {LoadingScreen} from './screens/LoadingScreen';
+import { LogInScreen} from './screens/LogInScreen';
+import { SignUpScreen } from './screens/SignUpScreen';
+import {Home} from './screens/Home';
+
+const Stack = createStackNavigator();
+
+const globalScreenOptions = {
+  headerShown: false
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>{
+      <Stack.Navigator screenOptions={globalScreenOptions} initialRouteName="Loading">
+        <Stack.Screen name='Loading' component={LoadingScreen}/>
+        <Stack.Screen  name='LogIn' component={LogInScreen} />
+        <Stack.Screen name='SignUp' component={SignUpScreen}/>
+        <Stack.Screen name='Home' component={Home}/>
+      </Stack.Navigator>
+    }</NavigationContainer>
   );
 }
 
