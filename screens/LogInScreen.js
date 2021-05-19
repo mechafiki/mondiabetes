@@ -163,7 +163,7 @@ export function LogInScreen({ navigation }) {
             <Button containerStyle={styles.Btn} 
             titleStyle={{fontFamily:'Nexa-Bold'}}
             onPress={signin} title="Connexion" />
-
+            <Text style={styles.noaccount}>Vous n'avez pas de compte?</Text>
             <Button containerStyle={styles.Btn}
             type='outline' title="Créer un compte"
             titleStyle={{fontFamily:'Nexa-Bold', color:"white"}}
@@ -207,9 +207,15 @@ const styles = StyleSheet.create({
       marginBottom: 20,
       fontFamily:'Nexa-Bold'
     },
+    noaccount:{
+      color:"#000",
+      fontSize:13,
+      marginBottom: 10,
+      fontFamily:'Nexa-Bold'
+    },
     Btn:{
       width:"50%",
-      marginBottom:15,
+      marginBottom:20,
       backgroundColor:'#E1341E'
       
     }
