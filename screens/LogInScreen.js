@@ -107,6 +107,16 @@ export function LogInScreen({ navigation }) {
     const signin = () => {
       auth
       .signInWithEmailAndPassword(email, password)
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          alert('E-mail déjà utilisé');
+        }
+    
+        if (error.code === 'auth/invalid-email') {
+          alert('E-mail invalide');
+        }
+  
+      });
       
 
     };
@@ -168,7 +178,7 @@ export function LogInScreen({ navigation }) {
             type='outline' title="Créer un compte"
             titleStyle={{fontFamily:'Nexa-Bold', color:"white"}}
             onPress={() => navigation.navigate('SignUp')} />
-            <StatusBar style="light" backgroundColor="#E1341E" />
+            <StatusBar style="light" backgroundColor="#145da0" />
         </View>
       );
 }
@@ -182,7 +192,8 @@ const styles = StyleSheet.create({
     },
     title:{
       fontFamily:'Marta-Bold',
-      fontSize:40,
+      fontSize:36,
+     // width:"80%",
       color:'#24a0ed',
       marginBottom:20
     },
@@ -216,7 +227,7 @@ const styles = StyleSheet.create({
     Btn:{
       width:"50%",
       marginBottom:20,
-      backgroundColor:'#E1341E'
+      backgroundColor:'#145da0'
       
     }
   

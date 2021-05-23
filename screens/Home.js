@@ -6,6 +6,7 @@ import { DashboardScreen} from '../screens/DashboardScreen';
 import { ProfileScreen} from '../screens/ProfileScreen';
 import { SettingsScreen} from '../screens/SettingsScreen';
 import { SearchScreen} from '../screens/SearchScreen';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export function Home({ navigation}){
 
@@ -25,13 +26,11 @@ export function Home({ navigation}){
     return(
         <Tab.Navigator
           initialRouteName='Dashboard'
-          tabBarOptions={{
-            showLabel: false,
-          }}
-
+          labeled={false}
         >
-          <Tab.Screen  name="Search" component={SearchScreen} 
+          <Tab.Screen  name="Search" component={SearchScreen}
           options={{
+            tabBarColor:"#145da0",
             tabBarIcon:({focused}) => (
               <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                   <Image source={require('../assets/search.png')}
@@ -48,23 +47,16 @@ export function Home({ navigation}){
           backBehavior='none'
           />
           <Tab.Screen  name="Dashboard" component={DashboardScreen} 
-          options={{
-            tabBarIcon:({focused}) => (
-              <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                  <Image source={require('../assets/dashboard.png')}
-                  resizeMode='contain'
-                  style={{
-                    width:30,
-                    height:30
-                  }}
-                  />
-              </View>
-
-            ),
-          }}
+                  options={{
+                    tabBarColor:"#1769b5",
+                    tabBarLabel: 'Accueil',
+                    tabBarIcon: ({ color }) => (
+                      <MaterialCommunityIcons name="home" color={color} size={26} />
+                    ),}}
           />
           <Tab.Screen  name="Profile" component={ProfileScreen} 
           options={{
+            tabBarColor:"#1974c8",
             tabBarIcon:({focused}) => (
               <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                   <Image source={require('../assets/profile.png')}
@@ -81,6 +73,7 @@ export function Home({ navigation}){
           />
           <Tab.Screen  name="Settings" component={SettingsScreen}
           options={{
+            tabBarColor:"#1c84e3",
             tabBarIcon:({focused}) => (
               <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                   <Image source={require('../assets/settings.png')}
@@ -100,26 +93,4 @@ export function Home({ navigation}){
     );
   }
 
-  const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f8faff',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      logout:{
-          position:'absolute',
-          top:30,
-          right:15
-      },
-      tabStyle:{
-        position:'absolute',
-        bottom:5,
-        left:5,
-        right:5,
-        elevation:0,
-        backgroundColor:"#badaf8",
-        borderRadius:5,
-        height:50
-      }
-  });
+ 

@@ -1,25 +1,61 @@
-import { TextInput  , StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { TextInput  , StyleSheet, Image, Text, View, ActivityIndicator, NativeModules } from 'react-native';
 import * as React from 'react';
+import { useEffect} from 'react';
 import { Button} from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons'; 
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import RNPickerSelect from 'react-native-picker-select';
 import { useFonts } from '@expo-google-fonts/inter';
-import {auth} from '../firebase';
-
+import {auth, firebase} from '../firebase';
+import * as ImagePicker from 'expo-image-picker';
 
 export function SignUpScreen({ navigation }){
-
+  const [avatar , setAvatar] = React.useState(null);
+  const [gender , setGender] = React.useState("");
   const [name, setName] = React.useState("");
   const [email , setEmail] = React.useState("");
+  const [ phone, setPhone] = React.useState("");
   const [password , setPassword] = React.useState("");
-  const [confirmPassword , setConfirmPassword] = React.useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert("monDiabète a besion d'utiliser votre caméra");
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setAvatar(result.uri);
+    }
+  };
+
 
   const signup = () => {
+
+  
     auth
     .createUserWithEmailAndPassword(email, password)
     .then((authUser) => {
-        authUser.user.updateProfile({
-            displayName: name
+          authUser.user.updateProfile({
+            displayName: name,
+            userImg: avatar
         });
+        
+      
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -32,6 +68,8 @@ export function SignUpScreen({ navigation }){
 
     });
   };
+
+
 
   let [fontsLoaded] = useFonts({
       'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
@@ -47,22 +85,45 @@ export function SignUpScreen({ navigation }){
   }
   
     
-
-
     return (
       <ScrollView contentContainerStyle={styles.container}>
+
           <View style={{height:30}}></View>
-          <Text style={styles.title}>Créer un compte</Text>
+             <TouchableOpacity style={styles.avatarPlaceholder} onPress={pickImage}>
+               <Ionicons name="ios-add" size={40} color="white" />
+             <Image source={{ uri: avatar }} style={styles.avatar} />
+             </TouchableOpacity>
           <View style={[styles.inputView , {marginTop:30}]} >
-          <TextInput  
-          style={styles.inputText}
-          placeholder="nom complet "
-          autoFocus
-          type="text"
-          value={name}
-          onChangeText={(text) => setName(text)}
-          placeholderTextColor="#057dcd"
-          />
+          
+            <View style={styles.selectGender}>
+              <RNPickerSelect 
+              style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{
+                label: 'genre',
+                value: null,
+                color:'grey'
+              }}
+              value={gender}
+              onValueChange={(value) => setGender(value)}
+                items={[
+                    { label: 'Mr.', value: 'male' },
+                    { label: 'Mme.', value: 'female' },
+                ]}
+              />
+            
+              <View style={styles.genderInputView } >
+                <TextInput  
+                style={styles.inputText}
+                placeholder="nom complet "
+                autoFocus
+                type="text"
+                value={name}
+                onChangeText={(text) => setName(text)}
+                placeholderTextColor="#057dcd"
+                />
+              </View>
+            </View>
           </View>
           <View style={styles.inputView} >
           <TextInput  
@@ -74,6 +135,7 @@ export function SignUpScreen({ navigation }){
           placeholderTextColor="#057dcd"
           />
           </View>
+
           <View style={styles.inputView} >
             <TextInput
           style={styles.inputText}
@@ -86,15 +148,13 @@ export function SignUpScreen({ navigation }){
           />
           </View>
           <View style={styles.inputView} >
-            <TextInput
+          <TextInput  
           style={styles.inputText}
-          placeholder="confirmer votre mot de passe" 
-          type="password"
-          value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
-          secureTextEntry={true}
+          placeholder="GSM"
+          type="text"
+          value={phone}
+          onChangeText={(text) => setPhone(text)}
           placeholderTextColor="#057dcd"
-          onSubmitEditing={signup}
           />
           </View>
           <Button title="S'inscrire" 
@@ -118,10 +178,21 @@ export function SignUpScreen({ navigation }){
       alignItems: 'center',
       justifyContent: 'center',
     },
-    title:{
-      fontFamily:'Nexa-Bold',
-      fontSize:30,
-      color:'#24a0ed'
+    avatarPlaceholder:{
+      position:'relative',
+      width:100,
+      height:100,
+      borderRadius:50,
+      backgroundColor:'#bfe5fd',
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center'
+    },
+    avatar:{
+      position:'absolute',
+      width:100,
+      height:100,
+      borderRadius:50,
     },
     inputView:{
       width:"80%",
@@ -135,6 +206,13 @@ export function SignUpScreen({ navigation }){
     inputText:{
       height:50,
       color:"black",
+      fontFamily:'Nexa-Light',
+      fontSize:16
+      
+  
+    },
+    pickerInputText:{
+      color:"#057dcd",
       fontFamily:'Nexa-Light'
   
     },
@@ -146,6 +224,48 @@ export function SignUpScreen({ navigation }){
     Btn:{
       width:"50%",
       marginBottom:15,
-      backgroundColor:'#E1341E'
+      backgroundColor:'#145da0'
     },
+    selectGender:{
+      width:'80%',
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between'
+    },
+    genderInputView:{
+      width:'100%',
+      backgroundColor:"white",
+      borderRadius:10,
+      height:50,
+      marginBottom:20,
+      justifyContent:"center",
+      paddingLeft:20,
+    },
+
+  });
+
+  const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+      fontFamily:'Nexa-Bold',
+      fontSize:12,
+      borderRadius: 8,
+      color: '#145da0',
+      justifyContent:'center',
+      display:'flex',
+      alignItems:'center',
+      paddingRight: 30,
+      height:50
+    },
+    inputAndroid: {
+      fontFamily:'Nexa-Bold',
+      fontSize:16,
+      borderRadius: 8,
+      color: '#145da0',
+      justifyContent:'center',
+      display:'flex',
+      alignItems:'center',
+      paddingRight: 30,
+      height:50
+    },
+
   });
