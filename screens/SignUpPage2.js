@@ -1,4 +1,4 @@
-import { TextInput  , StyleSheet, Image, View, ActivityIndicator } from 'react-native';
+import { TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useEffect} from 'react';
 import { Button} from 'react-native-elements';
@@ -7,87 +7,12 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
-import * as ImagePicker from 'expo-image-picker';
-
-
-export function SignUpScreen({ navigation }){
-  const [avatar , setAvatar] = React.useState(null);
-  const [gender , setGender] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email , setEmail] = React.useState("");
-  const [password , setPassword] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [diabetes, setDiabetes] = React.useState("");
 
 
 
-  useEffect(() => {
+export function SignUpPage2({ navigation }){
+
  
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert("monDiabète a besion d'utiliser votre caméra");
-        }
-      }
-    })();
-  }, []);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setAvatar(result.uri);
-    }
-  };
-
-
-  const signup = ({navigation}) => {
-
-  
-    auth.createUserWithEmailAndPassword(email, password)
-    .then((authUser) => {
-          authUser.user.updateProfile({
-            displayName: name,
-            photoURL: avatar || null ,
-            
-        });
-        
-        db.collection('users').doc(auth.currentUser.uid).set({
-          fullName: name,
-          email: email,
-          GSM: phone,
-          gender:gender,
-          diabetesType: diabetes,
-        });
-        
-        navigation.navigate('SignUpPage2');
-        
-     })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        alert('E-mail déjà utilisé');
-      }
-  
-      if (error.code === 'auth/invalid-email') {
-        alert('E-mail invalide');
-      }
-
-    
-    
-
-    });
-  };
-
-
-
   let [fontsLoaded] = useFonts({
       'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
       'Nexa-Light': require('../assets/fonts/Nexa-Light.otf'),
@@ -104,44 +29,7 @@ export function SignUpScreen({ navigation }){
     
     return (
       <ScrollView contentContainerStyle={styles.container}>
-
-          <View style={{height:30}}></View>
-             <TouchableOpacity style={styles.avatarPlaceholder} onPress={pickImage}>
-               <Ionicons name="ios-add" size={40} color="white" />
-             <Image source={{ uri: avatar }} style={styles.avatar} />
-             </TouchableOpacity>
-          <View style={[styles.inputView , {marginTop:30}]} >
-          
-            <View style={styles.selectGender}>
-              <RNPickerSelect 
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{
-                label: 'genre',
-                value: null,
-                color:'grey'
-              }}
-              value={gender}
-              onValueChange={(value) => setGender(value)}
-                items={[
-                    { label: 'Mr.', value: 'homme' },
-                    { label: 'Mme.', value: 'femme' },
-                ]}
-              />
-            
-              <View style={styles.genderInputView } >
-                <TextInput  
-                style={styles.inputText}
-                placeholder="nom complet "
-                autoFocus
-                type="text"
-                value={name}
-                onChangeText={(text) => setName(text)}
-                placeholderTextColor="#057dcd"
-                />
-              </View>
-            </View>
-          </View>
+         
           <View style={styles.inputView} >
           <TextInput  
           style={styles.inputText}

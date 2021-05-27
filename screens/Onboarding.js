@@ -47,7 +47,7 @@ const Done = ({...props}) => (
         style={{marginHorizontal:10}}
         {...props}
     >
-        <Text style={{fontSize:16, fontFamily:'Nexa-Bold' }}>Continuer</Text>
+        <Text style={{fontSize:16, fontFamily:'Nexa-Bold' }}>C'est parti</Text>
     </TouchableOpacity>
 );
 

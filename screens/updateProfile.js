@@ -12,7 +12,7 @@ import * as ImagePicker from 'expo-image-picker';
 export function updateProfile({ navigation }){
     return (
         <ScrollView contentContainerStyle={styles.container}>
-  
+            
             
         </ScrollView>
     );

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import {  TouchableOpacity, TextInput , StyleSheet, Text, View , ActivityIndicator} from 'react-native';
+import {  TouchableOpacity,Image ,TextInput , StyleSheet, Text, View , ActivityIndicator, ScrollView} from 'react-native';
 import { Button} from 'react-native-elements';
 import { useFonts } from '@expo-google-fonts/inter';
 import Svg, { Defs, ClipPath, Path, G } from "react-native-svg";
@@ -115,7 +115,7 @@ export function LogInScreen({ navigation }) {
         if (error.code === 'auth/invalid-email') {
           alert('E-mail invalide');
         }
-  
+       
       });
       
 
@@ -143,10 +143,9 @@ export function LogInScreen({ navigation }) {
 
 
     return (  
-        <View style={styles.container} >
-          <SvgComponent  width={150} height={150} />
-          <Text style={styles.title}>MON DIABÈTES</Text>
-          <View style={styles.inputView}  >
+        <ScrollView contentContainerStyle={styles.container} >
+          <Text style={styles.title}>MonDiabètes</Text>
+          <View style={[styles.inputView, {marginTop:30}]}  >
             <TextInput  
                 style={styles.inputText}
                 placeholder="e-mail"
@@ -179,7 +178,7 @@ export function LogInScreen({ navigation }) {
             titleStyle={{fontFamily:'Nexa-Bold', color:"white"}}
             onPress={() => navigation.navigate('SignUp')} />
             <StatusBar style="light" backgroundColor="#145da0" />
-        </View>
+        </ScrollView>
       );
 }
 
@@ -191,10 +190,9 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     title:{
-      fontFamily:'Marta-Bold',
-      fontSize:36,
-     // width:"80%",
-      color:'#24a0ed',
+      fontFamily:'Nexa-Bold',
+      fontSize:40,
+      color:'#000c66',
       marginBottom:20
     },
     inputView:{
@@ -215,7 +213,7 @@ const styles = StyleSheet.create({
     forgot:{
       color:"#123175",
       fontSize:13,
-      marginBottom: 20,
+      margin: 20,
       fontFamily:'Nexa-Bold'
     },
     noaccount:{
@@ -227,7 +225,7 @@ const styles = StyleSheet.create({
     Btn:{
       width:"50%",
       marginBottom:20,
-      backgroundColor:'#145da0'
+      backgroundColor:'#000c66'
       
     }
   

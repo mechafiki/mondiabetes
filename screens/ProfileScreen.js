@@ -1,20 +1,21 @@
-import { SafeAreaView, StyleSheet, Text,View, ActivityIndicator, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { SafeAreaView,StyleSheet, Text,View, ActivityIndicator,TouchableOpacity, ScrollView} from 'react-native';
 import * as React from 'react';
-import {auth, db, firestore} from '../firebase';
-import { Avatar, Title, Caption } from 'react-native-paper';
+import {auth, db} from '../firebase';
+import {  Title, Caption } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from '@expo-google-fonts/inter';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { updateProfile} from '../screens/updateProfile';
+import {Avatar} from 'react-native-elements';
 
 import Icon from 'react-native-vector-icons/EvilIcons';
 const profileStack = createStackNavigator();
 
 export function ProfileScreen({  }){
-
 
       return (
           <profileStack.Navigator initialRouteName='profileScreen' screenOptions={{headerShown:false}}>
@@ -27,8 +28,19 @@ export function ProfileScreen({  }){
    export function Profile({navigation}){
 
     const user = auth.currentUser;
-  
+    const [userData, setUserData] = React.useState("");
+    const getUser = async() => {
+        db.collection('users').doc(user.uid).get()
+        .then((documentSnapchot) => {
+            if ( documentSnapchot.exists){
+                setUserData(documentSnapchot.data());
+            }
+        })
+    }
 
+    React.useEffect(() => {
+            getUser();
+    }, [])
 
     let [fontsLoaded] = useFonts({
         'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
@@ -48,15 +60,24 @@ export function ProfileScreen({  }){
 
     return(
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{justifyContent:'center', alignItems:'center'}}
+            <ScrollView contentContainerStyle={{justifyContent:'center', alignItems:'center',paddingBottom:30}}
              > 
             <View style={styles.header} >
- 
-                    <Icon  name="user" size={120} color="#32a0ed"  />
+            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.openDrawer()}>
+                    <AntDesign name="bars" size={24} color="white" />
+                </TouchableOpacity>                
+
+                    <Avatar 
+                        rounded
+                        size={80}
+                        source={{
+                            uri : user?.photoURL
+                        }}
+                    />
                     <Title style={{fontFamily:'Nexa-Bold',fontSize:26, color:'white'}}>
                          {user.displayName}
                        </Title> 
-                    <Caption style={{fontFamily:'Nexa-Light', fontSize:14 , color:'white'}}>{user.email}</Caption>       
+                    <Caption style={{fontFamily:'Nexa-Light', fontSize:14 , color:'white'}}>{user.email}</Caption>
             </View>
                     <TouchableOpacity  style={styles.modifier} onPress={() => navigation.push('updateProfile')}>
                     <MaterialCommunityIcons name="pencil" size={20} color="white" />
@@ -66,76 +87,76 @@ export function ProfileScreen({  }){
             </View>
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons} >
-                    <Entypo name="user" size={32} color="#32a0ed" />
+                    <Entypo name="user" size={32} color="#0019d4" />
                     </View>
                     <View>
-                    <Title style={{fontFamily:'Marta-Bold'}}>Nom </Title>
+                    <Title style={styles.cardTitle}>Nom </Title>
                     <Caption style={{fontFamily:'Nexa-Light'}}>{user.displayName}</Caption>
                     </View>
                 </View>
                 
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                        <Icon name="calendar" size={32} color="#32a0ed" />
+                        <Icon name="calendar" size={32} color="#0019d4" />
                     </View>
                     <View>
-                    <Title style={{fontFamily:'Marta-Bold'}}>Date de naissance </Title>
+                    <Title style={styles.cardTitle}>Date de naissance </Title>
                     <Caption style={{fontFamily:'Nexa-Light'}}> 01/01/1970</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                        <Entypo name="location" size={28} color="#32a0ed" />
+                        <Entypo name="location" size={28} color="#0019d4" />
                     </View>
                     <View>
-                    <Title style={{fontFamily:'Marta-Bold'}}>Addresse </Title>
+                    <Title style={styles.cardTitle}>Addresse </Title>
                     <Caption style={{fontFamily:'Nexa-Light'}}> Cite Dakhla, 80060, Agadir</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                        <MaterialCommunityIcons name="gender-male-female" size={32} color="#32a0ed" />
+                        <MaterialCommunityIcons name="gender-male-female" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={{fontFamily:'Marta-Bold'}}>Genre</Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}> Homme</Caption>
+                    <Title style={styles.cardTitle}>Genre</Title>
+                    <Caption style={{fontFamily:'Nexa-Light'}}>{userData.gender}</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                    <FontAwesome5 name="weight" size={32} color="#32a0ed" />
+                    <FontAwesome5 name="weight" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={{fontFamily:'Marta-Bold'}}>Poids </Title>
+                    <Title style={styles.cardTitle}>Poids </Title>
                     <Caption style={{fontFamily:'Nexa-Light'}}>70 Kg</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                    <MaterialCommunityIcons name="human-male-height-variant" size={32} color="#32a0ed" />
+                    <MaterialCommunityIcons name="human-male-height-variant" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={{fontFamily:'Marta-Bold'}}>Taille </Title>
+                    <Title style={styles.cardTitle}>Taille </Title>
                     <Caption style={{fontFamily:'Nexa-Light'}}> 170 cm</Caption>
                     </View>
                 </View>
                 
                 <View style={styles.userInfoSection}>
                     <View style={styles.icons}>
-                    <MaterialCommunityIcons name="diabetes" size={32} color="#32a0ed" />
+                    <MaterialCommunityIcons name="diabetes" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={{fontFamily:'Marta-Bold'}}>Type de diabètes</Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}>Type 1</Caption>
+                    <Title style={styles.cardTitle}>Type de diabètes</Title>
+                    <Caption style={{fontFamily:'Nexa-Light'}}>{userData.diabetesType}</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
                     <View  style={styles.icons}>
-                    <Feather name="phone" size={32} color="#32a0ed" />
+                    <Feather name="phone" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={{fontFamily:'Marta-Bold'}}>GSM </Title>   
-                    <Caption style={{fontFamily:'Nexa-Light'}}> 0677777777</Caption>
+                    <Title style={styles.cardTitle}>GSM </Title>   
+                    <Caption style={{fontFamily:'Nexa-Light'}}> {user.phoneNumber? user.phoneNumber : 'Non défini' }</Caption>
                     </View>
                 </View>
         </ScrollView>
@@ -152,21 +173,30 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#f8faff',
         justifyContent:'center',
       },
     header:{
-        backgroundColor:'#145da0',
+        backgroundColor:'#000c66',
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
         height:200,
         width:'100%',       
     },
+    headerIcon:{
+        justifyContent:'center',
+        alignItems:'center',
+        position:'absolute',
+        top:20,
+        left:15,
+        height:50
+      
+      },
     modifier:{
         height:34,
         width:34,
-        backgroundColor:"#0c2d48",
+        backgroundColor:"#0019d4",
         borderRadius:17,
         justifyContent:'center',
         alignItems:'center',
@@ -182,7 +212,7 @@ const styles = StyleSheet.create({
        padding:5,
        //justifyContent:'center',
        width:"90%",
-       backgroundColor:'#e7eefb',
+       backgroundColor:'#fff',
        margin:"1%",
        borderRadius:10,
     },
@@ -191,6 +221,10 @@ const styles = StyleSheet.create({
         justifyContent:'center'
         
     },
+    cardTitle:{
+        fontFamily:'Marta-Bold',
+        color:"#555",
+    }
  
 
   });
