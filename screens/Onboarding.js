@@ -1,12 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
-
-
 import Onboarding from 'react-native-onboarding-swiper';
-
-
-
 const Dots = ({selected}) => {
     let backgroundColor;
 
@@ -65,14 +60,17 @@ export function OnboardingScreen({navigation}) {
           </View>
         );
       } 
+
+      
+
     return (
         <Onboarding
         SkipButtonComponent={Skip}
         NextButtonComponent={Next}
         DoneButtonComponent={Done}
         DotComponent={Dots}
-        onSkip={() => navigation.replace("LogIn")}
-        onDone={() => navigation.navigate("LogIn")}
+        onSkip={() => navigation.replace("LoadingScreen")}
+        onDone={() => navigation.navigate("LoadingScreen")}
         pages={[
           {
             backgroundColor: '#fff',
@@ -91,11 +89,11 @@ export function OnboardingScreen({navigation}) {
             subTitleStyles:{ fontSize:14, fontFamily:'Nexa-Light' }
           },
           {
-            backgroundColor: '#ddd',
+            backgroundColor: '#f8faff',
             image: <Image source={require('../assets/onboarding-img3.png')} />,
-            title: 'Become The Star',
-            titleStyles:{fontFamily:'Marta-Bold' },
-            subtitle: "Let The Spot Light Capture You",
+            title: 'Accéder à vos informations en tout moment',
+            titleStyles:{fontFamily:'Marta-Bold',color:'#0000ff' },
+            subtitle: "Accéder à votre informations, mettez vos objectifs et plus, sur mon diabètes",
             subTitleStyles:{ fontSize:14, fontFamily:'Nexa-Light' }
           },
         ]}

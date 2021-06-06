@@ -15,12 +15,23 @@ import {Avatar} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/EvilIcons';
 const profileStack = createStackNavigator();
 
-export function ProfileScreen({  }){
+export function ProfileScreen(){
 
       return (
           <profileStack.Navigator initialRouteName='profileScreen' screenOptions={{headerShown:false}}>
               <profileStack.Screen name='profile' component={Profile}/>
-              <profileStack.Screen name='updateProfile' component={updateProfile}/>
+              <profileStack.Screen name='updateProfile' component={updateProfile} 
+              options={{
+                  headerShown:true,
+                  title:"modifier votre profile",
+                  headerStyle: {
+                    backgroundColor: '#000c66',
+                  },
+                  headerTintColor: '#fff',
+                  headerTitleStyle: {
+                    fontFamily:'Nexa-Bold'
+                  },
+                }}/>
           </profileStack.Navigator>
       );
 }
@@ -66,16 +77,15 @@ export function ProfileScreen({  }){
             <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.openDrawer()}>
                     <AntDesign name="bars" size={24} color="white" />
                 </TouchableOpacity>                
-
-                    <Avatar 
-                        rounded
-                        size={80}
-                        source={{
-                            uri : user?.photoURL
-                        }}
-                    />
+                <Avatar 
+                    rounded
+                    size={80}
+                    source={{
+                   uri : userData.profilePic
+                    }}
+                />
                     <Title style={{fontFamily:'Nexa-Bold',fontSize:26, color:'white'}}>
-                         {user.displayName}
+                         {userData.displayName}
                        </Title> 
                     <Caption style={{fontFamily:'Nexa-Light', fontSize:14 , color:'white'}}>{user.email}</Caption>
             </View>
@@ -91,7 +101,7 @@ export function ProfileScreen({  }){
                     </View>
                     <View>
                     <Title style={styles.cardTitle}>Nom </Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}>{user.displayName}</Caption>
+                    <Caption style={{fontFamily:'Nexa-Light'}}>{userData.displayName}</Caption>
                     </View>
                 </View>
                 
@@ -100,8 +110,8 @@ export function ProfileScreen({  }){
                         <Icon name="calendar" size={32} color="#0019d4" />
                     </View>
                     <View>
-                    <Title style={styles.cardTitle}>Date de naissance </Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}> 01/01/1970</Caption>
+                    <Title style={styles.cardTitle}>Age </Title>
+                    <Caption style={{fontFamily:'Nexa-Light'}}> {userData.age? userData.age : 'non défini'}</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
@@ -127,8 +137,8 @@ export function ProfileScreen({  }){
                     <FontAwesome5 name="weight" size={32} color="#0019d4" />
                     </View>
                     <View >
-                    <Title style={styles.cardTitle}>Poids </Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}>70 Kg</Caption>
+                    <Title style={styles.cardTitle}>Poids actuel</Title>
+                    <Caption style={{fontFamily:'Nexa-Light'}}>{userData.weight? userData.weight : 'pas défini'}</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>
@@ -137,7 +147,7 @@ export function ProfileScreen({  }){
                     </View>
                     <View >
                     <Title style={styles.cardTitle}>Taille </Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}> 170 cm</Caption>
+                    <Caption style={{fontFamily:'Nexa-Light'}}>{userData.size? userData.size : 'pas défini'}</Caption>
                     </View>
                 </View>
                 
@@ -156,7 +166,7 @@ export function ProfileScreen({  }){
                     </View>
                     <View >
                     <Title style={styles.cardTitle}>GSM </Title>   
-                    <Caption style={{fontFamily:'Nexa-Light'}}> {user.phoneNumber? user.phoneNumber : 'Non défini' }</Caption>
+                    <Caption style={{fontFamily:'Nexa-Light'}}> {userData.GSM}</Caption>
                     </View>
                 </View>
         </ScrollView>
@@ -189,8 +199,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         position:'absolute',
         top:20,
-        left:15,
-        height:50
+        left:20,
       
       },
     modifier:{

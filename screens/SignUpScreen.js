@@ -1,4 +1,4 @@
-import { TextInput  , StyleSheet, Image, View, ActivityIndicator } from 'react-native';
+import { TextInput ,StyleSheet, Image, View, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useEffect} from 'react';
 import { Button} from 'react-native-elements';
@@ -9,7 +9,6 @@ import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
 import * as ImagePicker from 'expo-image-picker';
 
-
 export function SignUpScreen({ navigation }){
   const [avatar , setAvatar] = React.useState(null);
   const [gender , setGender] = React.useState("");
@@ -18,8 +17,6 @@ export function SignUpScreen({ navigation }){
   const [password , setPassword] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [diabetes, setDiabetes] = React.useState("");
-
-
 
   useEffect(() => {
  
@@ -49,44 +46,56 @@ export function SignUpScreen({ navigation }){
   };
 
 
-  const signup = ({navigation}) => {
+  const signup = async() => {
 
-  
-    auth.createUserWithEmailAndPassword(email, password)
-    .then((authUser) => {
-          authUser.user.updateProfile({
+    if ( diabetes === 'grossesse' && gender === 'homme' ){
+      alert(' Veuillez vérifier vos informations ')
+
+    }
+    else{
+      const expression = /(\+212|0)(6|7)([ \-_/]*)(\d[ \-_/]*){8,}/g;
+      if ( !expression.test(String(phone))){
+          alert('GSM incorrect');
+      }
+      else{
+
+        auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          
+          db.collection('users').doc(auth.currentUser.uid).set({
             displayName: name,
-            photoURL: avatar || null ,
-            
-        });
-        
-        db.collection('users').doc(auth.currentUser.uid).set({
-          fullName: name,
-          email: email,
-          GSM: phone,
-          gender:gender,
-          diabetesType: diabetes,
-        });
-        
-        navigation.navigate('SignUpPage2');
-        
-     })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        alert('E-mail déjà utilisé');
+            email: email,
+                GSM: phone,
+                gender:gender,
+                diabetesType: diabetes,
+                profilePic: avatar,
+                address:'',
+                age:'',
+                weight:'',
+                size:'',
+                activityUnity:'Km',
+                weightUnity:'Kg',
+                weightGoal:'',
+                glycemicUnity:'g/l',
+                minGlycemieBeforeMeal:'',
+                maxGlycemieBeforeMeal:'',
+                minGlycemieAfterMeal:'',
+                maxGlycemieAfterMeal:'',      
+              });
+            }
+            )
+            .catch(error => {
+              if (error.code === 'auth/email-already-in-use') {
+                alert('E-mail déjà utilisé');
+              }
+              
+              if (error.code === 'auth/invalid-email') {
+                alert('E-mail invalide');
+              }
+            });
+          }  
+        };
       }
-  
-      if (error.code === 'auth/invalid-email') {
-        alert('E-mail invalide');
-      }
-
-    
-    
-
-    });
-  };
-
-
 
   let [fontsLoaded] = useFonts({
       'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
@@ -100,7 +109,6 @@ export function SignUpScreen({ navigation }){
       </View>
     );
   }
-  
     
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -167,7 +175,7 @@ export function SignUpScreen({ navigation }){
           <View style={styles.inputView} >
           <TextInput  
           style={styles.inputText}
-          placeholder="GSM ( optionel )"
+          placeholder="GSM "
           type="text"
           value={phone}
           onChangeText={(text) => setPhone(text)}
@@ -209,7 +217,6 @@ export function SignUpScreen({ navigation }){
   );
   }
 
-
   const styles = StyleSheet.create({
     container: {
       flexGrow: 1,
@@ -233,6 +240,20 @@ export function SignUpScreen({ navigation }){
       height:100,
       borderRadius:50,
     },
+    selectGender:{
+      width:'75%',
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between'
+    },
+    genderInputView:{
+      width:'100%',
+      backgroundColor:"white",
+      height:50,
+      marginBottom:20,
+      justifyContent:"center",
+      paddingLeft:20,
+    },
     inputView:{
       width:"80%",
       backgroundColor:"white",
@@ -252,30 +273,15 @@ export function SignUpScreen({ navigation }){
       width:"50%",
       marginBottom:15,
       backgroundColor:'#000c66'
-    },
-    selectGender:{
-      width:'80%',
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between'
-    },
-    genderInputView:{
-      width:'100%',
-      backgroundColor:"white",
-      height:50,
-      marginBottom:20,
-      justifyContent:"center",
-      paddingLeft:20,
-    },
-
+    }   
   });
 
   const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
-      fontFamily:'Nexa-Bold',
+      fontFamily:'Nexa-Light',
       fontSize:12,
       borderRadius: 8,
-      color: '#145da0',
+      color: '#000c66',
       justifyContent:'center',
       display:'flex',
       alignItems:'center',

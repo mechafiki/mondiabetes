@@ -1,125 +1,142 @@
-import { TextInput, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { TextInput, StyleSheet,Text, View, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useEffect} from 'react';
 import { Button} from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons'; 
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import RNPickerSelect from 'react-native-picker-select';
 import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
 
 
-
 export function SignUpPage2({ navigation }){
+  const user = auth.currentUser;
+  const [userData, setUserData] = React.useState("");
 
- 
-  let [fontsLoaded] = useFonts({
-      'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
-      'Nexa-Light': require('../assets/fonts/Nexa-Light.otf'),
-  });
-
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
+  const getUser = async() => {
+      db.collection('users').doc(user.uid).get()
+      .then((documentSnapchot) => {
+          if ( documentSnapchot.exists){
+              setUserData(documentSnapchot.data());
+          }
+      })
   }
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  let [fontsLoaded] = useFonts({
+    'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
+    'Nexa-Light': require('../assets/fonts/Nexa-Light.otf'),
+});
+
+if (!fontsLoaded) {
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  );
+}
   
+  const submit = async() => {
+    if ( userData.address === '' ){
+      alert('Veuillze spécifier votre adresse');
+    }
+    else{
+      if ( userData.age < 0 || userData.age === '' ){
+        alert('Veuillze spécifier votre age');
+      }
+      else{
+        if(userData.weight < 5 || userData.age === '' ){
+          alert('Veuillez spécifier votre poids');
+        }
+        else{
+          if ( userData.size === '' || userData.size < 46 ){
+              alert('Veuillze spécifier votre taille')
+          }
+          else{
+            db.collection('users').doc(user.uid).update({
+              address: userData.address,
+              age: userData.age,
+              size: userData.size,
+              weight: userData.weight
+        
+            });
+          }
+        }
+      }
+    }
+    
+
+
+  }
     
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-         
-          <View style={styles.inputView} >
+      <View style={styles.container}>
+           <Text style={styles.title}>Compléter votre profil</Text>
+         <View style={styles.inputView} >
           <TextInput  
           style={styles.inputText}
-          placeholder="votre e-mail"
-          type="email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          placeholderTextColor="#057dcd"
-          />
-          </View>
-
-          <View style={styles.inputView} >
-            <TextInput
-          style={styles.inputText}
-          placeholder="choisissez un mot de passe" 
-          type="password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry={true}
-          placeholderTextColor="#057dcd"
-          />
-          </View>
-          <View style={styles.inputView} >
-          <TextInput  
-          style={styles.inputText}
-          placeholder="GSM ( optionel )"
+          placeholder="Adresse"
           type="text"
-          value={phone}
-          onChangeText={(text) => setPhone(text)}
+          value={userData.address}
+          onChangeText={(text) => setUserData({...userData, address : text })}
           placeholderTextColor="#057dcd"
           />
           </View>
-          <View style={styles.inputView } >
-          
-            <View >
-              <RNPickerSelect 
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{
-                label: 'Type de diabètes',
-                value: null,
-                color:'grey'
-              }}
-              value={diabetes}
-              onValueChange={(value) => setDiabetes(value)}
-                items={[
-                    { label: 'Type 1', value: 'type1' },
-                    { label: 'Type 2', value: 'type2' },
-                    { label: 'Diabète de grossesse', value: 'grossesse' },
-                ]}
-              />
-            </View>
+          <View style={styles.inputView} >
+          <TextInput  
+          style={styles.inputText}
+          placeholder="Age"
+          keyboardType = 'numeric'
+          type="number"
+          value={userData.age}
+          onChangeText={(text) => setUserData({...userData, age : text })}
+          placeholderTextColor="#057dcd"
+          />
           </View>
-          
-          <Button title="S'inscrire" 
-          containerStyle={[styles.Btn , {marginTop:30}]}
+          <View style={styles.inputView} >
+          <TextInput  
+          style={styles.inputText}
+          placeholder="Poids (en Kg)"
+          keyboardType = 'numeric'
+          type="number"
+          value={userData.weight}
+          onChangeText={(text) => setUserData({...userData, weight : text })}
+          placeholderTextColor="#057dcd"
+          />
+          </View>
+          <View style={styles.inputView} >
+          <TextInput  
+          style={styles.inputText}
+          placeholder="Taille (en cm)"
+          keyboardType = 'numeric'
+          type="number"
+          value={userData.size}
+          onChangeText={(text) => setUserData({...userData, size : text })}
+          placeholderTextColor="#057dcd"
+          />
+          </View>
+         
+          <Button title="Valider et continuer" 
+          containerStyle={[{width:"50%",marginTop:30}]}
           titleStyle={{fontFamily:'Nexa-Bold'}} 
-          onPress={signup}/>
-          
-        <Button  title="Retour" type='outline' 
-        containerStyle={styles.Btn}
-        titleStyle={{fontFamily:'Nexa-Bold' , color:"white"}}
-        onPress={() => navigation.navigate('LogIn')} />
-      </ScrollView>
+          onPress={submit}
+          />
+      </View>
   );
   }
 
 
   const styles = StyleSheet.create({
     container: {
-      flexGrow: 1,
+      flex:1,
       backgroundColor: '#f8faff',
       alignItems: 'center',
       justifyContent: 'center',
     },
-    avatarPlaceholder:{
-      position:'relative',
-      width:100,
-      height:100,
-      borderRadius:50,
-      backgroundColor:'#bfe5fd',
-      display:'flex',
-      justifyContent:'center',
-      alignItems:'center'
-    },
-    avatar:{
-      position:'absolute',
-      width:100,
-      height:100,
-      borderRadius:50,
+    title:{
+      color:"#000c66",
+      fontFamily:'Nexa-Bold',
+      fontSize:30,
+      margin:30,
     },
     inputView:{
       width:"80%",
@@ -135,51 +152,6 @@ export function SignUpPage2({ navigation }){
       color:"black",
       fontFamily:'Nexa-Light',
       fontSize:16
-    },
-    Btn:{
-      width:"50%",
-      marginBottom:15,
-      backgroundColor:'#000c66'
-    },
-    selectGender:{
-      width:'80%',
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between'
-    },
-    genderInputView:{
-      width:'100%',
-      backgroundColor:"white",
-      height:50,
-      marginBottom:20,
-      justifyContent:"center",
-      paddingLeft:20,
-    },
-
-  });
-
-  const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontFamily:'Nexa-Bold',
-      fontSize:12,
-      borderRadius: 8,
-      color: '#145da0',
-      justifyContent:'center',
-      display:'flex',
-      alignItems:'center',
-      paddingRight: 30,
-      height:50
-    },
-    inputAndroid: {
-      fontFamily:'Nexa-Light',
-      fontSize:16,
-      borderRadius: 8,
-      color: '#000c66',
-      justifyContent:'center',
-      display:'flex',
-      alignItems:'center',
-      paddingRight: 30,
-      height:50
-    },
-
+    }
+    
   });
