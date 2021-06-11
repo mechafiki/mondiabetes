@@ -2,10 +2,7 @@ import React from 'react';
 import { SafeAreaView, View, FlatList,TouchableOpacity, StyleSheet, Text, ActivityIndicator} from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import {auth, db} from '../firebase';
-import { LinearGradient } from 'expo-linear-gradient';
  
-
-
 export function renderItem({ item }){
   
   return(
@@ -24,10 +21,10 @@ export function Item ({ title}){
   const user = auth.currentUser;
   const [userData, setUserData] = React.useState("");
   const getUser = async() => {
-    db.collection('users').doc(user.uid).collection('glycemicTests').doc().get()
+    db.collection('users').doc(user.email).collection('glycemicTests').doc().get()
     .then((documentSnapshot) => {
       if (documentSnapshot.exists) {
-        console.log('here');
+      //  console.log('here');
         setUserData(documentSnapshot.data());
       }
     })
@@ -40,8 +37,6 @@ export function Item ({ title}){
         
   <View style={styles.item}>
     <Text style={styles.itemTitle}>{title}{userData.time}  </Text>
-   
-    
   </View>
 );
 }
@@ -58,10 +53,11 @@ export function GlycemicTests({navigation}){
         const fetchTests = async() => {
             if (!DATA){
                 const list = []; 
-                await db.collection('users').doc(user.uid).collection('glycemicTests').get()
+                await db.collection('patients').doc(user.email).collection('glycemicTests').get()
                 .then((querySnapchot) => {
                     querySnapchot.forEach(doc => {
                     const { id, typeTest ,createdAt, time, valTest} = doc.data();
+                    console.log("DOC : ",  doc)
                       list.push({
                           id: id,
                           typeTest:typeTest,
@@ -81,8 +77,6 @@ export function GlycemicTests({navigation}){
         fetchTests();
     }, []);
     
-   
-      
     
       return (
         <SafeAreaView style={styles.container}>

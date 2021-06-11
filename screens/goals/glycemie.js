@@ -10,7 +10,7 @@ export function GlycemieScreen({ navigation }){
     const [userData, setUserData] = React.useState("");
     const user = auth.currentUser;
     const getUser = async() => {
-        db.collection('users').doc(user.uid).get()
+       await db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());
@@ -23,7 +23,7 @@ export function GlycemieScreen({ navigation }){
     }, [])
 
     const  submit = () => {
-        db.collection('users').doc(user.uid).update({
+        db.collection('patients').doc(user.email).update({
               minGlycemieBeforeMeal:userData.minGlycemieBeforeMeal,
               maxGlycemieBeforeMeal:userData.maxGlycemieBeforeMeal,
               minGlycemieAfterMeal:userData.minGlycemieAfterMeal,
@@ -54,7 +54,7 @@ export function GlycemieScreen({ navigation }){
             </View>
             <View style={{width:'100%', flexDirection:'row',height:40}}>    
                 <View style={styles.beforeORafter}>
-                    <Text style={styles.valTitle}>Min / Max : ({userData.uniteGlycemique? userData.uniteGlycemique : '(unité pas défini)'})</Text>
+                    <Text style={styles.valTitle}>Min / Max : ({userData.glycemicUnity? userData.glycemicUnity : '(unité pas défini)'})</Text>
                 </View>
                 <View style={{height:30,width:120,flexDirection:'row' ,position:'absolute',top:10,right:10}}>
                     <View style={styles.val}>
@@ -70,7 +70,7 @@ export function GlycemieScreen({ navigation }){
                     style={{width: 150, height: 70}}
                     value={userData.minGlycemieBeforeMeal}
                     onValueChange={ (val) => setUserData({...userData , minGlycemieBeforeMeal : val.toFixed(2) }) }
-                    minimumValue={.7}
+                    minimumValue={.5}
                     maximumValue={1.4}
                     minimumTrackTintColor="#5298c1"
                     maximumTrackTintColor="#000000"
@@ -97,11 +97,11 @@ export function GlycemieScreen({ navigation }){
             </View>
             <View style={{width:'100%', flexDirection:'row',height:40}}>    
                 <View style={styles.beforeORafter}>
-                    <Text style={styles.valTitle}>Min / Max : ({userData.uniteGlycemique? userData.uniteGlycemique : '(unité pas défini)'})</Text>
+                    <Text style={styles.valTitle}>Min / Max : ({userData.glycemicUnity? userData.glycemicUnity : '(unité pas défini)'})</Text>
                 </View>
                 <View style={{height:30,width:120,flexDirection:'row' ,position:'absolute',top:10,right:10}}>
                     <View style={styles.val}>
-                        <Text style={styles.valText}>{userData.minGlycemieAfterMeal? userData.minGlycemieAfterMeal : '0.70'}</Text>
+                        <Text style={styles.valText}>{userData.minGlycemieAfterMeal}</Text>
                     </View>
                     <View style={styles.val}>
                         <Text style={styles.valText}>{userData.maxGlycemieAfterMeal? userData.maxGlycemieAfterMeal : '1.40'}</Text>
@@ -113,7 +113,7 @@ export function GlycemieScreen({ navigation }){
                     style={{width: 150, height: 70}}
                     value={userData.minGlycemieAfterMeal}
                     onValueChange={ (val) => setUserData({...userData , minGlycemieAfterMeal : val.toFixed(2) }) }
-                    minimumValue={.7}
+                    minimumValue={0.7}
                     maximumValue={1.4}
                     minimumTrackTintColor="#5298c1"
                     maximumTrackTintColor="#000000"
@@ -122,7 +122,7 @@ export function GlycemieScreen({ navigation }){
                     style={{width: 150, height: 70}}
                     value={userData.maxGlycemieAfterMeal}
                     onValueChange={ (val) => setUserData({...userData , maxGlycemieAfterMeal : val.toFixed(2) }) }
-                    minimumValue={userData.minGlycemieAfterMeal}
+                    minimumValue={0.7 }
                     maximumValue={1.4}
                     minimumTrackTintColor="#5298c1"
                     maximumTrackTintColor="#000000"

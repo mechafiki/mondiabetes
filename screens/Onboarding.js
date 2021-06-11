@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useFonts } from '@expo-google-fonts/inter';
 import Onboarding from 'react-native-onboarding-swiper';
 const Dots = ({selected}) => {
@@ -57,6 +58,7 @@ export function OnboardingScreen({navigation}) {
         return (
           <View style={styles.container}>
             <ActivityIndicator size="large" color="#59d7ee" />
+            <StatusBar style="light" backgroundColor="#000c66" />
           </View>
         );
       } 

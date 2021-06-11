@@ -12,10 +12,10 @@ export function LogInScreen({ navigation }) {
 
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-
     React.useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((authUser) => {
           if(authUser){
+            
               navigation.replace('Home');
           }
         });
@@ -99,7 +99,7 @@ export function LogInScreen({ navigation }) {
             <Button containerStyle={styles.Btn}
             type='outline' title="Créer un compte"
             titleStyle={{fontFamily:'Nexa-Bold', color:"white"}}
-            onPress={() => navigation.navigate('SignUp')} />
+            onPress={() => navigation.navigate('AccountType')} />
             <StatusBar style="light" backgroundColor="#145da0" />
         </ScrollView>
       );

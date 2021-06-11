@@ -8,9 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
-import Svg, {G, Path } from "react-native-svg"
-
-
+import Svg, {G, Path } from "react-native-svg";
 export function SvgComponent(props) {
     return (
       <Svg
@@ -46,9 +44,6 @@ export function SvgComponent(props) {
     )
   }
   
-  
-
-
 export function DashboardScreen({ navigation }){
     const TriangleCorner = () => {
         return <View style={[styles.triangleCorner]} />;
@@ -58,9 +53,19 @@ export function DashboardScreen({ navigation }){
     const [userData, setUserData] = React.useState(null);
     const [valTest, setValTest] = React.useState("");
     const [typeTest, setTypeTest] = React.useState(null);
+    const [hours, setHours] = React.useState("");
+    const [minutes, setMinutes] = React.useState("");
+    const [testTime, setTestTime] = React.useState("");
     const [hydraration, setHydratation] = React.useState("");
+    const [mealName, setMealName] = React.useState("");
+    const [calories, setCalories] = React.useState("");
+    const [mealTime, setMealTime] = React.useState("");
+    const [mealHours, setMealHours] = React.useState("");
+    const [mealMinutes, setMealMinutes] = React.useState("");
+    const [description, setDescription] = React.useState("");
+ 
     const getUser = async() => {
-        db.collection('users').doc(user.uid).get()
+        db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());
@@ -72,8 +77,57 @@ export function DashboardScreen({ navigation }){
             getUser();
     }, [])
 
+
+    
+    const submitMeal = async() => {
+      const parsedH = Number.parseInt(mealHours, 10 );
+      const parsedM = Number.parseInt(mealMinutes, 10 );
+ 
+      if (isNaN(parsedH) || Number.isNaN(parsedM) ) {
+           alert("le temps n'a pas été entré correctement"); 
+      }
+       else if( parsedH < 0 || parsedH > 23 ){
+           alert("L'heure doit être entre 0 et 23 ");
+       }
+       else if( parsedM < 0 || parsedM > 59 ){
+         alert("Minutes doit être entre 0 et 59");
+       }
+       else if ( mealName === '' ){
+         alert("Le nom du repas ne peut pas être vide");
+       }
+       else if( calories < 0  ) { 
+          alert("Le nombre de calories ne peut pas être négatif")
+
+       }
+         else {
+         setMealTime(parsedH+':'+parsedM);
+         console.log(parsedH)
+         db.collection('patients').doc(user.email).collection('meals').add({
+             id:Math.random().toString(36).substring(7),
+             mealName: mealName,
+             calories: calories,
+             createdAt:  new Date().toDateString(),
+             mealTime: mealTime,
+             description:description,
+         })
+         .then( console.log('success'))
+         }
+     }
+
     const submitTest = async() => {
-        if ( valTest < 0 || valTest > 2 ){
+     const parsedH = Number.parseInt(hours, 10 );
+     const parsedM = Number.parseInt(minutes, 10 );
+
+     if (isNaN(parsedH) || Number.isNaN(parsedM) ) {
+          alert("le temps n'a pas été entré correctement"); 
+     }
+      else if( parsedH < 0 || parsedH > 23 ){
+          alert("L'heure doit être entre 0 et 23 ");
+      }
+      else if( parsedM < 0 || parsedM > 59 ){
+        alert("Minutes doit être entre 0 et 59");
+      }
+      else  if ( valTest < 0.4 || valTest > 2 ){
             alert("La valeur n'a pas été entré correctement");
         }
         else if ( valTest == '' ){
@@ -89,17 +143,43 @@ export function DashboardScreen({ navigation }){
             else if( valTest < 0.7){
                 alert("Votre glycèmie est trop basse !! Veuillez consulter votre médecin");   
             }
-        db.collection('users').doc(user.uid).collection('glycemicTests').add({
+            
+        setTestTime(parsedH+':'+parsedM);
+        db.collection('patients').doc(user.email).collection('glycemicTests').add({
             id:Math.random().toString(36).substring(7),
             valTest: valTest,
             typeTest: typeTest,
             createdAt:  new Date().toDateString(),
-            time: new Date().toTimeString(),
+            testTime: testTime,
         })
         .then( console.log('success'))
         }
     }
 
+
+    const submitHydratation = async() => {
+      const parsedH = Number.parseInt(hydraration, 10 );
+      if (isNaN(parsedH)  ) {
+        alert("les données n'ont pas été entrés correctement"); 
+      }
+      else if( parsedH < 0 ){
+          alert("Le champ hydratation ne peut pas être négatif");
+      }
+      else if( parsedH > 5 ){
+        alert("La valeur est grande , veuillez vérifier vos informations");
+    }
+      else {
+        db.collection('patients').doc(user.email).collection('hydraration').add({
+          id:Math.random().toString(36).substring(7),
+          hydraration : parsedH ,
+          createdAt:  new Date().toDateString(),
+      })
+      .then( alert('succès'))
+      }
+    }
+   
+
+    
     let [fontsLoaded] = useFonts({
         'Nexa-Bold': require('../assets/fonts/Nexa-Bold.otf'),
         'Nexa-Light': require('../assets/fonts/Nexa-Light.otf'),
@@ -109,7 +189,7 @@ export function DashboardScreen({ navigation }){
       });
       if (!fontsLoaded) {
         return (
-          <View style={styles.container}>
+          <View style={[styles.container, {flex:1} ]}>
             <ActivityIndicator size="large" color="#057dcd" />
           </View>
         );
@@ -131,6 +211,7 @@ export function DashboardScreen({ navigation }){
                     <Text style={styles.cardTitle}>Glucose Sanguin</Text>
                     <Text style={styles.addText}>Ajouter la mesure du glucose</Text>
                     <View style={styles.add}>
+                    
                         <RNPickerSelect 
                             style={pickerSelectStyles}
                             useNativeAndroidPickerStyle={false}
@@ -151,8 +232,27 @@ export function DashboardScreen({ navigation }){
                             keyboardType='numeric'
                             value={valTest}
                             onChangeText={(value) => setValTest(value)}
-                        />  
+                        />
+                        
                     </View>
+                    <View style={{flexDirection:'row', width:"50%",justifyContent:'center',alignItems:'center'}}>
+                      <Text style={{color:"#000c66", fontFamily:'Nexa-Light'}}>Préciser le temps du test</Text>
+                          <TextInput style={styles.timeInput}
+                              placeholder="HH"
+                              keyboardType='numeric'
+                              value={hours}
+                              onChangeText={(value) => setHours(value)}
+                              
+                          />
+                          <TextInput style={styles.timeInput}
+                              placeholder="MM"
+                              keyboardType='numeric'
+                              value={minutes}
+                              onChangeText={(value) => setMinutes(value)}
+                              
+                              />
+                      </View>
+
                     <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width:"100%",height:40,marginTop:5,flexDirection:'row'}} onPress={submitTest} >
                             <Ionicons name="add-circle-outline" size={24} color="#000c66"  />
                             <Text style={{fontFamily:'Nexa-Bold',color:'#000'}}>Ajouter</Text>
@@ -168,18 +268,61 @@ export function DashboardScreen({ navigation }){
                             keyboardType='numeric'
                             value={hydraration}
                             onChangeText={(value) => setHydratation(value)}
-                            onEndEditing={console.log(hydraration)}
                         />  
-                        <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width:"100%",height:40,marginTop:5,flexDirection:'row'}} onPress={submitTest} >
+                        <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width:"100%",height:40,marginTop:5,flexDirection:'row'}} onPress={submitHydratation}  >
                             <Ionicons name="add-circle-outline" size={24} color="#000c66"  />
                             <Text style={{fontFamily:'Nexa-Bold',color:'#000'}}>Ajouter</Text>
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.addText}>Ajouter un repas</Text>
-                    <TouchableOpacity style={{justifyContent:'center',alignItems:'center' , marginBottom:30}}>
-                    <MaterialCommunityIcons name="food" size={30} color="#000c66" />
-                        
-                    </TouchableOpacity>
+                    <View style={styles.addMeal}>
+                      <TextInput style={styles.mealInput}
+                            placeholder="Nom du repas (obligatoire)"
+                            value={mealName}
+                            onChangeText={(value) => setMealName(value)}
+                            onEndEditing={console.log(mealName)}
+                            
+                        /> 
+                        <TextInput style={styles.mealInput}
+                            placeholder="Nombre de Calories (recommandé)"
+                            keyboardType='numeric'
+                            value={calories}
+                            onChangeText={(value) => setCalories(value)}
+                           
+                        />
+                        <TextInput style={[styles.mealInput, {textAlignVertical: 'top'}]}
+                            placeholder="Description (falculatif)"
+                            multiline
+                            numberOfLines={7}
+                            maxLength={250}
+                            value={description}
+                            onChangeText={(value) => setDescription(value)}
+                            
+                        />
+                          
+                    </View>
+                    <View style={{flexDirection:'row', width:"50%",justifyContent:'center',alignItems:'center'}}>
+                      <Text style={{color:"#000c66", fontFamily:'Nexa-Light'}}>Préciser le temps du repas</Text>
+                        <TextInput style={styles.timeInput}
+                            placeholder="HH"
+                            keyboardType='numeric'
+                            value={mealHours}
+                            onChangeText={(value) => setMealHours(value)}
+                            
+                        />
+                        <TextInput style={styles.timeInput}
+                            placeholder="MM"
+                            keyboardType='numeric'
+                            value={mealMinutes}
+                            onChangeText={(value) => setMealMinutes(value)}
+                            
+                            
+                        />
+                      </View>
+                      <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width:"100%",height:40,marginTop:5,flexDirection:'row'}} onPress={submitMeal} >
+                            <Ionicons name="add-circle-outline" size={24} color="#000c66"  />
+                            <Text style={{fontFamily:'Nexa-Bold',color:'#000'}}>Ajouter</Text>
+                        </TouchableOpacity> 
                     
                 </View>
                 <View style={styles.cards}>
@@ -224,6 +367,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
       },
+
       headerTitle:{
         flexDirection:'row',
         justifyContent:'flex-start',
@@ -241,7 +385,7 @@ const styles = StyleSheet.create({
       },
       add:{
         flexDirection:'row',
-        width:"50%",
+        width:"60%",
         height:40,
         marginTop:10,
         alignItems:'center',
@@ -259,14 +403,34 @@ const styles = StyleSheet.create({
         height:"100%",
         borderRadius:5,
         padding:5,
-        width:90,
-        marginLeft:3
+        width:130,
+        marginLeft:3,
+        textAlign:'center'
+     },
+     timeInput:{
+       backgroundColor:'#eaf0ff',
+       height:40,
+       width:40,
+       textAlign:'center',
+       borderRadius:5,
+       margin:3,
 
+     },
+     addMeal:{
+       width:'100%',
+     },
+     mealInput:{
+      backgroundColor:'#eaf0ff',
+     // height:"100%",
+      borderRadius:5,
+      padding:5,
+      width:"95%",
+      margin: 5,
+      
      },
       cards:{
           width:"90%",
           padding:10,
-         // height:200,
           margin:5,
           borderRadius:20,
           backgroundColor:'#f8faff',
@@ -305,10 +469,11 @@ const styles = StyleSheet.create({
         inputAndroid: {
           fontFamily:'Nexa-Light',
           fontSize:14,
-          color: '#000c66',
-          backgroundColor:'#c8d8ff',
+          color: '#fff',
+          backgroundColor:'#000c66',
           textAlign:'center',
           height:"100%",
           width:90,
+          borderRadius:5
         }
       });

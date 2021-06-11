@@ -63,11 +63,11 @@ export function StatsHomeScreen({ navigation }) {
           <TouchableOpacity>
             <AntDesign name="bars" size={28} color="#000c66" onPress={() => navigation.openDrawer()}/>
           </TouchableOpacity>
-          <Text style={styles.title}>MonDiabètes</Text>
+          <Text style={styles.title}>Historique</Text>
         </View>
         <View style={{position:'absolute',top:0,right:0,zIndex:999}}><SvgComponent /></View>
           <Animatable.View 
-              style={{width:'90%'}}
+              style={{width:'90%', marginTop:40}}
               animation="bounceInUp"
               iterationCount={1}
               direction="alternate">
@@ -102,6 +102,8 @@ export function StatsHomeScreen({ navigation }) {
                    <View style={styles.shape}><Text></Text></View>
               </TouchableOpacity>
           </Animatable.View> 
+
+          <View style={styles.line}></View>
       </ScrollView>
     );
 }
@@ -161,7 +163,7 @@ export function StatsScreen({navigation}){
         borderRightWidth: 100,
         borderTopWidth: 100,
         borderRightColor: "transparent",
-        borderTopColor: "#5298c1",
+        borderTopColor: "#5f99ea",
         borderRadius:2,
         transform: [{ rotate: "180deg" }],
       },
@@ -184,6 +186,13 @@ export function StatsScreen({navigation}){
         borderRightColor: "transparent",
         borderTopColor: "#000c66",
         transform: [{ rotate: "90deg" }],
+      },
+      line:{
+        width:"50%",
+        height:5,
+        backgroundColor:"#000c66",
+        marginTop:100,
+        borderRadius:2.5
       },
 
     

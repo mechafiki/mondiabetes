@@ -5,6 +5,8 @@ import { Avatar, Title, Caption, Drawer, Text, TouchableRipple, Switch } from 'r
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons'; 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Fontisto } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
 
 export function DrawerContent(props){
     const user = auth.currentUser;
@@ -12,12 +14,20 @@ export function DrawerContent(props){
     const [isEnabled, setIsEnabled] = React.useState(false);
     const [userData, setUserData] = React.useState("");
     const getUser = async() => {
-        db.collection('users').doc(user.uid).get()
+        db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());
             }
         })
+        if ( !userData ){
+            db.collection('doctors').doc(user.email).get()
+        .then((documentSnapchot) => {
+            if ( documentSnapchot.exists){
+                setUserData(documentSnapchot.data());
+            }
+        })
+        }
     }
   
     React.useEffect(() => {
@@ -44,7 +54,12 @@ export function DrawerContent(props){
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
                         <View style={{flexDirection:'row',marginTop: 15}}>
-                            <Avatar.Image   source={{ uri : userData.profilePic }}/>
+                           { userData.profilePic?
+
+                            <Avatar.Image   source={{  uri : userData.profilePic }}/>
+                            :
+                            <Avatar.Image source={require('../assets/logov2.png')} />
+                           }
                             <View style={{marginLeft:15, flexDirection:'column'}}>
                                 <Title style={styles.title}>{userData.displayName}</Title>
                                 <Caption style={styles.caption}>{userData.email}</Caption>
@@ -65,39 +80,111 @@ export function DrawerContent(props){
                                 color:"#000c66",
                                 fontFamily:'Marta-Regular'
                             }}
-                            onPress={() => {props.navigation.navigate('Dashboard')}}
+                            
+                            
+                                    onPress={
+                                        userData.accountType === 'patient'
+                                        ?
+                                        () => {props.navigation.navigate('Dashboard')} 
+                                        :
+                                        () => {props.navigation.navigate('DoctorDashboard')}
+                                    }
+                               
+
+                            
                         />
-                        <DrawerItem 
-                            icon={() => (
-                                <Icon 
-                                name="account-outline" 
-                                color="#000c66"
-                                size={24}
-                                />
-                            )}
-                            label="Profile"
-                            labelStyle={{
-                                color:"#000c66",
-                                fontFamily:'Marta-Regular'
-                            }}
-                            onPress={() => {props.navigation.navigate('Profile')}}
-                        />
-                        <DrawerItem 
-                            icon={() => (
-                                <Ionicons 
-                                name="stats-chart-outline" 
-                                color="#000c66"
-                                size={24} 
-                                />
-                            )}
-                            label="Statistiques"
-                            labelStyle={{
+                        {   
+                            userData.accountType === 'patient'
+                            ?
+                            <DrawerItem 
+                                icon={() => (
+                                    <Icon 
+                                    name="account-outline" 
+                                    color="#000c66"
+                                    size={24}
+                                    />
+                                )}
+                                label="Profile"
+                                labelStyle={{
                                     color:"#000c66",
                                     fontFamily:'Marta-Regular'
-                            }}
-                            onPress={() => {props.navigation.navigate('Stats')}}
-                        />
-                        <DrawerItem 
+                                }}
+                                onPress={() => {props.navigation.navigate('Profile')}}
+                            />
+                            :
+                            null
+                        }
+                        
+                        {
+                            userData.accountType === 'patient'
+                            ?
+                            <DrawerItem 
+                                icon={() => (
+                                    <Ionicons 
+                                    name="stats-chart-outline" 
+                                    color="#000c66"
+                                    size={24} 
+                                    />
+                                )}
+                                label="Statistiques"
+                                labelStyle={{
+                                        color:"#000c66",
+                                        fontFamily:'Marta-Regular'
+                                }}
+                                onPress={() => {props.navigation.navigate('Stats')}}
+                            />
+                            :
+                            <DrawerItem 
+                                icon={() => (
+                                    <Ionicons 
+                                    name="stats-chart-outline" 
+                                    color="#000c66"
+                                    size={24} 
+                                    />
+                                )}
+                                label="Statistiques des patients"
+                                labelStyle={{
+                                        color:"#000c66",
+                                        fontFamily:'Marta-Regular'
+                                }}
+                                onPress={() => {props.navigation.navigate('Stats')}}
+                            />
+                        }
+                        {
+                            userData.accountType === 'patient'
+                            ?
+                            <DrawerItem 
+                                icon={() => (
+                                    <Fontisto 
+                                    name="doctor" 
+                                    size={24} 
+                                    color="#000c66" />
+                                )}
+                                label="Contacter votre médecin"
+                                labelStyle={{
+                                        color:"#000c66",
+                                        fontFamily:'Marta-Regular'
+                                }}
+                            />
+                            :
+                            <DrawerItem 
+                                icon={() => (
+                                    <Entypo 
+                                    name="chat" 
+                                    size={24} 
+                                    color="#000c66" />
+                                )}
+                                label="Chat"
+                                labelStyle={{
+                                        color:"#000c66",
+                                        fontFamily:'Marta-Regular'
+                                }}
+                            />
+                        }
+                        {
+                            userData.accountType === 'patient'
+                            ?
+                            <DrawerItem 
                             icon={({color, size}) => (
                                 <Ionicons 
                                 name="ios-settings-outline" color="#000c66"
@@ -110,7 +197,24 @@ export function DrawerContent(props){
                                 fontFamily:'Marta-Regular'
                             }}
                             onPress={() => {props.navigation.navigate('Settings')}}
-                        />
+                            />
+                            :
+                            <DrawerItem 
+                            icon={({color, size}) => (
+                                <Ionicons 
+                                name="ios-settings-outline" color="#000c66"
+                                size={24} 
+                                />
+                            )}
+                            label="Paramètres"
+                            labelStyle={{
+                                color:"#000c66",
+                                fontFamily:'Marta-Regular'
+                            }}
+                           // onPress={console.log('here')}
+                            />
+
+                        }
                     </Drawer.Section>
                     <Drawer.Section title="Préférences"
                     style={{}}>

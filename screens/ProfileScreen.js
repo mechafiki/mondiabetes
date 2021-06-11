@@ -41,7 +41,7 @@ export function ProfileScreen(){
     const user = auth.currentUser;
     const [userData, setUserData] = React.useState("");
     const getUser = async() => {
-        db.collection('users').doc(user.uid).get()
+        db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());
@@ -77,6 +77,8 @@ export function ProfileScreen(){
             <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.openDrawer()}>
                     <AntDesign name="bars" size={24} color="white" />
                 </TouchableOpacity>                
+               { 
+                userData.profilePic?
                 <Avatar 
                     rounded
                     size={80}
@@ -84,6 +86,13 @@ export function ProfileScreen(){
                    uri : userData.profilePic
                     }}
                 />
+                : 
+                <Avatar
+                    rounded
+                    size={80}
+                    source={require('../assets/logov2.png')} 
+                />
+                }
                     <Title style={{fontFamily:'Nexa-Bold',fontSize:26, color:'white'}}>
                          {userData.displayName}
                        </Title> 

@@ -5,8 +5,9 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LogInScreen} from './screens/LogInScreen';
-import { SignUpScreen } from './screens/SignUpScreen';
-import { SignUpPage2 } from './screens/SignUpPage2';
+import {AccountType} from './screens/AccountType';
+import {PatientSignUp } from './screens/PatientSignUp';
+import {DoctorSignUp} from './screens/doctor/DoctorSignUp';
 import {LoadingScreen} from './screens/LoadingScreen';
 import {Home} from './screens/Home';
 import {OnboardingScreen} from './screens/Onboarding';
@@ -30,10 +31,11 @@ console.warn = message => {
       
       <Stack.Navigator screenOptions={globalScreenOptions} initialRouteName="OnboardingScreen">
         <Stack.Screen name='OnboardingScreen' component={OnboardingScreen } />
-        <Stack.Screen  name='LogIn' component={LogInScreen} />
-        <Stack.Screen  name='LoadingScreen' component={LoadingScreen} />
-        <Stack.Screen name='SignUp' component={SignUpScreen}/>
-        <Stack.Screen name='SignUpPage2' component={SignUpPage2}/>
+        <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
+        <Stack.Screen name='LogIn' component={LogInScreen} />
+        <Stack.Screen name='AccountType' component={AccountType} />
+        <Stack.Screen name='PatientSignUp' component={PatientSignUp}/>
+        <Stack.Screen name='DoctorSignUp' component={DoctorSignUp} />
         <Stack.Screen name='Home' component={Home}/>
       </Stack.Navigator>
     }</NavigationContainer>

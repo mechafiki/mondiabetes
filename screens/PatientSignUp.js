@@ -1,22 +1,24 @@
-import { TextInput ,StyleSheet, Image, View, ActivityIndicator } from 'react-native';
+import { ScrollView, TouchableOpacity, TextInput ,StyleSheet, Image, View, ActivityIndicator } from 'react-native';
 import * as React from 'react';
 import { useEffect} from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { Button} from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons'; 
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import RNPickerSelect from 'react-native-picker-select';
 import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
 import * as ImagePicker from 'expo-image-picker';
 
-export function SignUpScreen({ navigation }){
+
+export function PatientSignUp({ navigation }){
   const [avatar , setAvatar] = React.useState(null);
-  const [gender , setGender] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email , setEmail] = React.useState("");
-  const [password , setPassword] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [diabetes, setDiabetes] = React.useState("");
+  const [gender , setGender] = React.useState(null);
+  const [name, setName] = React.useState(null);
+  const [email , setEmail] = React.useState(null);
+  const [password , setPassword] = React.useState(null);
+  const [confirmPassword, setConfirmPassword] = React.useState(null);
+  const [phone, setPhone] = React.useState(null);
+  const [diabetes, setDiabetes] = React.useState(null);
 
   useEffect(() => {
  
@@ -48,23 +50,44 @@ export function SignUpScreen({ navigation }){
 
   const signup = async() => {
 
-    if ( diabetes === 'grossesse' && gender === 'homme' ){
-      alert(' Veuillez vérifier vos informations ')
+    const expression = /(\+212|0)(6|7)([ \-_/]*)(\d[ \-_/]*){8}/g;
 
-    }
-    else{
-      const expression = /(\+212|0)(6|7)([ \-_/]*)(\d[ \-_/]*){8,}/g;
-      if ( !expression.test(String(phone))){
-          alert('GSM incorrect');
+      if ( !gender){
+        alert("Veuiller spécifier votre genre");
+      }
+      else if( !name ){
+        alert("Le champ nom complet est obligatoire");
+      }
+      else if( !email){
+        alert("Le champ email complet est obligatoire");
+      }
+      else if( !password){
+        alert("Veuiller choisir un mot de passe");
+      }
+      else if (!confirmPassword){
+        alert("Une confiration du mot de passe est demandée");
+      }
+      else if( confirmPassword !== password ){
+        alert("Les mots de passes ne correspondent pas");
+      }
+      else if( !diabetes){
+        alert("Veuiller spécifier votre type de diabètes");
+      }
+      else if ( diabetes === 'grossesse' && gender === 'homme'){
+        alert("Veuiller vérifier vos informations");
+      }
+      else if( !expression.test(String(phone)) && phone ){
+        alert("GSM incorrect");
       }
       else{
 
         auth.createUserWithEmailAndPassword(email, password)
         .then(() => {
           
-          db.collection('users').doc(auth.currentUser.uid).set({
-            displayName: name,
-            email: email,
+          db.collection('patients').doc(auth.currentUser.email).set({
+                accountType: 'patient',
+                displayName: name,
+                email: email,
                 GSM: phone,
                 gender:gender,
                 diabetesType: diabetes,
@@ -92,9 +115,11 @@ export function SignUpScreen({ navigation }){
               if (error.code === 'auth/invalid-email') {
                 alert('E-mail invalide');
               }
+              if (error.code === 'auth/weak-password') {
+                alert('mot de passe faible');
+              }
             });
           }  
-        };
       }
 
   let [fontsLoaded] = useFonts({
@@ -173,6 +198,17 @@ export function SignUpScreen({ navigation }){
           />
           </View>
           <View style={styles.inputView} >
+            <TextInput
+          style={styles.inputText}
+          placeholder="confirmez votre mot de passe" 
+          type="password"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry={true}
+          placeholderTextColor="#057dcd"
+          />
+          </View> 
+          <View style={styles.inputView} >
           <TextInput  
           style={styles.inputText}
           placeholder="GSM "
@@ -205,7 +241,7 @@ export function SignUpScreen({ navigation }){
           </View>
           
           <Button title="S'inscrire" 
-          containerStyle={[styles.Btn , {marginTop:30}]}
+          containerStyle={[styles.Btn , {marginTop:10}]}
           titleStyle={{fontFamily:'Nexa-Bold'}} 
           onPress={signup}/>
           
@@ -259,7 +295,7 @@ export function SignUpScreen({ navigation }){
       backgroundColor:"white",
       borderRadius:10,
       height:50,
-      marginBottom:10,
+      marginBottom:7,
       justifyContent:"center",
       paddingLeft:20,
     },
@@ -271,7 +307,7 @@ export function SignUpScreen({ navigation }){
     },
     Btn:{
       width:"50%",
-      marginBottom:15,
+      marginBottom:10,
       backgroundColor:'#000c66'
     }   
   });

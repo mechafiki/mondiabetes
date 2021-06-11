@@ -12,7 +12,7 @@ export function updateProfile({ navigation }){
   const user = auth.currentUser;
   const [userData, setUserData] = React.useState("");
   const getUser = async() => {
-      db.collection('users').doc(user.uid).get()
+      db.collection('patients').doc(user.email).get()
       .then((documentSnapchot) => {
           if ( documentSnapchot.exists){
               setUserData(documentSnapchot.data());
@@ -48,12 +48,12 @@ export function updateProfile({ navigation }){
   };
 
   const submit = () => {
-    const expression = /(\+212|0)(6|7)([ \-_/]*)(\d[ \-_/]*){8,}/g;
+    const expression = /(\+212|0)(6|7)([ \-_/]*)(\d[ \-_/]*){8}/g;
     if ( !expression.test(String(userData.GSM))){
         alert('GSM incorrect')
     }
     else{
-      db.collection('users').doc(auth.currentUser.uid).update({
+      db.collection('patients').doc(auth.currentUser.email).update({
         displayName:userData.displayName,
         email:userData.email,
         address:userData.address,

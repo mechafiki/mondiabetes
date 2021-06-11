@@ -11,7 +11,7 @@ export function SignUpPage2({ navigation }){
   const [userData, setUserData] = React.useState("");
 
   const getUser = async() => {
-      db.collection('users').doc(user.uid).get()
+      db.collection('users').doc(user.email).get()
       .then((documentSnapchot) => {
           if ( documentSnapchot.exists){
               setUserData(documentSnapchot.data());
@@ -52,7 +52,7 @@ if (!fontsLoaded) {
               alert('Veuillze spécifier votre taille')
           }
           else{
-            db.collection('users').doc(user.uid).update({
+            db.collection('users').doc(user.email).update({
               address: userData.address,
               age: userData.age,
               size: userData.size,

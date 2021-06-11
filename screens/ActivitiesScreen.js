@@ -21,7 +21,7 @@ export function Item ({ title}){
   const user = auth.currentUser;
   const [userData, setUserData] = React.useState("");
   const getUser = async() => {
-    db.collection('users').doc(user.uid).collection('activities').doc().get()
+    db.collection('users').doc(user.email).collection('activities').doc().get()
     .then((documentSnapshot) => {
       if (documentSnapshot.exists) {
         console.log('here');
@@ -55,7 +55,7 @@ export function ActivitiesScreen({navigation}){
         const fetchTests = async() => {
             if (!DATA){
                 const list = []; 
-                await db.collection('users').doc(user.uid).collection('activities').get()
+                await db.collection('users').doc(user.email).collection('activities').get()
                 .then((querySnapchot) => {
                     querySnapchot.forEach(doc => {
                     const { } = doc.data();
@@ -89,7 +89,6 @@ export function ActivitiesScreen({navigation}){
                 </TouchableOpacity>
                 <View style={styles.title}>
                     <Text style={{color:'white', fontFamily:'Nexa-Light', fontSize:20}}>Historique des activités sportives</Text>
-    
                 </View>
             </View>
             <FlatList

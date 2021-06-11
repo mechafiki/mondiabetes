@@ -12,7 +12,7 @@ export function SettingsScreen({ navigation }){
 
     const user = auth.currentUser;
     const getUser = async() => {
-        db.collection('users').doc(user.uid).get()
+        db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());
@@ -26,7 +26,7 @@ export function SettingsScreen({ navigation }){
 
     const change = async() => {
         alert('ici')
-        db.collection('users').doc(user.uid).update({
+        db.collection('patients').doc(user.email).update({
             weightGoal: userData.weightGoal, 
             
         });
@@ -36,13 +36,13 @@ export function SettingsScreen({ navigation }){
     const submitGlycemie = async(value) => {
         if ( value !== "null" ){
             setUserData({...userData, glycemicUnity:value})
-        db.collection('users').doc(user.uid).update({
+        db.collection('patients').doc(user.email).update({
             glycemicUnity:userData.glycemicUnity, 
             
         });
         }
         else{
-            db.collection('users').doc(user.uid).update({
+            db.collection('patients').doc(user.email).update({
                 glycemicUnity:'g/l', 
                 
             });
@@ -52,12 +52,12 @@ export function SettingsScreen({ navigation }){
     const submitWeight = async(value) => {
         if ( value !== "null" ){
             setUserData({...userData, weightUnity:value})
-        db.collection('users').doc(user.uid).update({
+        db.collection('patients').doc(user.email).update({
             weightUnity:userData.weightUnity,     
         });
         }
         else{
-            db.collection('users').doc(user.uid).update({
+            db.collection('patients').doc(user.email).update({
                 weightUnity:'Kg',   
             });
         }
