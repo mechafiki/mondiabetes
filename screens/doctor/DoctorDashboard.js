@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { useState , useEffect } from 'react';
+import * as Animatable from 'react-native-animatable';
 import { SafeAreaView, ActivityIndicator, ScrollView, FlatList ,TextInput,StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';  
+import { AntDesign , Ionicons } from '@expo/vector-icons';
 import {auth, db} from '../../firebase';
 import Svg, {G, Path } from "react-native-svg";
 
@@ -43,16 +44,16 @@ export function SvgComponent(props) {
 
 export function Item ({ title}){
     const user = auth.currentUser;
-    const [userData, setUserData] = React.useState("");
+    const [userData, setUserData] = useState("");
     const getUser = async() => {
-      db.collection('doctors').doc(user.email).collection('clients').doc().get()
+      db.collection('doctors').doc(user.email).collection('treats').doc().get()
       .then((documentSnapshot) => {
         if (documentSnapshot.exists) {
           setUserData(documentSnapshot.data());
         }
       })
     }
-    React.useEffect(() => {
+    useEffect(() => {
       getUser();
     }, []);
 
@@ -74,9 +75,20 @@ export function renderItem({ item }){
         <Text style={styles.itemText}>E-mail : {item.email}</Text>
         <Text style={styles.itemText}>GSM : {item.phone}</Text>
       </View>
-    
+      <View style={{position:'absolute',bottom:4,right:4 , width:"50%",height:"25%" , flexDirection:'row'}}>
+        <TouchableOpacity style={styles.showBtn}  >
+          <Text style={{color:"#fff"}}>Consulter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteBtn}onPress={(item) => deletePatient(item.email)} >
+          <Text style={{color:"#fff"}}>Supprimer</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
+}
+
+const deletePatient = async() => {
+
 }
 
 export function DoctorDashboard({ navigation }){
@@ -85,11 +97,11 @@ export function DoctorDashboard({ navigation }){
         };
       
       const user = auth.currentUser;
-      const [userData, setUserData] = React.useState("");
-      const [patientEmail, setPatientEmail] = React.useState(null);
-      const [patientData , setPatientData] = React.useState("");
-      const [DATA, setDATA] = React.useState(null);
-      const [loading , setLoading] = React.useState(true);
+      const [userData, setUserData] = useState("");
+      const [patientEmail, setPatientEmail] = useState(null);
+      const [patientData , setPatientData] = useState("");
+      const [DATA, setDATA] = useState(null);
+      const [loading , setLoading] = useState(true);
 
       const getUser = async() => {
         console.log(user.email)
@@ -103,11 +115,11 @@ export function DoctorDashboard({ navigation }){
             setLoading(false);
       };
 
-      React.useEffect(() => {
+      useEffect(() => {
           getUser();
           const fetchList = async() => {
                   const list = [];
-                  await db.collection('doctors').doc(user.email).collection('clients').get()
+                  await db.collection('doctors').doc(user.email).collection('treats').get()
                   .then((querySnapchot) => {
                       querySnapchot.forEach(doc => {
                       const { name, email, phone } = doc.data();
@@ -143,23 +155,42 @@ export function DoctorDashboard({ navigation }){
                 alert("Le champ cordonnées de recherche ne peut pas être vide");
             }
             else {
-                  const email = patientEmail.toLowerCase();
+                    const email = patientEmail.toLowerCase();
                     db.collection('patients').doc(email).get()
                     .then((documentSnapchot) => {
-                        if ( documentSnapchot.exists){
-                            //alert("Existe");
-                            setPatientData(documentSnapchot.data());
+                        if ( !documentSnapchot.exists){
+                          alert("Cet idnetifiant n'existe pas dans notre bases de données")
+                          
                         }
-                        else{
-                            alert("Cet idnetifiant n'existe pas dans notre bases de données")
-                        }
-                        db.collection('doctors').doc(user.email).collection('clients').doc(email).set({
-                            name : patientData.displayName,
-                            email: patientData.email,
-                            phone: patientData.GSM
-                        })
-                        .then 
-                          alert('Patient ajouté');
+                        else {
+                          
+                          db.collection('patients').doc(email).collection('doctor').get()
+                          .then((querySnapchot) => {
+                            if ( querySnapchot.exists){
+                                alert("Ce patient est déjà assigné ")
+                            }
+                            else{
+                              setPatientData(documentSnapchot.data());
+                            
+                              db.collection('doctors').doc(user.email).collection('treats').doc(email).set({
+                                  name : patientData.displayName,
+                                  email: patientData.email,
+                                  phone: patientData.GSM,
+                                  gender: patientData.gender,
+                                  profilePic: patientData.profilePic? patientData.profilePic : null,
+                              })
+                              .then (
+                                db.collection('patients').doc(email).collection('doctor').doc(user.email).set({
+                                    email :userData.email,
+                                    name  :userData.displayName,
+                                })
+                                .then (() => alert('Patient ajouté'))
+                                  
+                              )
+                            }
+                          })
+                        }  
+
                     });
                 }
     };
@@ -176,13 +207,25 @@ export function DoctorDashboard({ navigation }){
                   </TouchableOpacity>
                   <Text style={styles.title}>Tableau de bord</Text>
               </View>
-              <View style={styles.greeting}>
-                  <Text style={{fontFamily:'Nexa-Bold', color:"#000c66",fontSize:40}}>
-                  Bonjour
-                  <Text style={{color:"#5f99ea"}}>{userData.displayName}</Text>
-                  </Text>
-                  
-              </View>
+              <Animatable.View 
+                  style={styles.greeting}
+                  animation="fadeInLeft"
+                  duration={2}
+                  easing="ease"
+                  iterationCount={1}
+                  direction="alternate">
+                      <Text style={{fontFamily:'Nexa-Bold', color:"#000c66",fontSize:40}}>
+                      Bonjour
+                      <Text style={{color:"#5f99ea"}}> {userData.displayName}</Text>
+                      </Text>
+              </Animatable.View>
+                  <Animatable.View  
+                      style={{width:"50%", height:4,borderRadius:2,backgroundColor:'#000c66',marginBottom:20}}
+                      animation="fadeInUp"
+                      easing="ease"
+                      iterationCount={1}
+                      >
+                  </Animatable.View>
               <View style={styles.cards}>
                 <Text style={styles.cardTitle}>Ajouter un Patient</Text>  
                   <View style={styles.add}>
@@ -243,7 +286,7 @@ const styles = StyleSheet.create({
         marginLeft:20
       },
       greeting:{
-        height:200,
+        height:150,
         width:"100%", 
         justifyContent:'flex-start',
         paddingTop:40,
@@ -307,7 +350,7 @@ const styles = StyleSheet.create({
       item: {
         paddingLeft: 20,
         width:300,
-        height:70,
+        height:80,
         justifyContent:'center',
         borderColor:'#000c66',
         borderWidth:1,
@@ -320,6 +363,24 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily:'Nexa-Light'
       },
+      showBtn:{
+        backgroundColor:"#5f99ea",
+        borderRadius:4,
+        height:"100%",
+        width:"48%", 
+        margin:2,
+        alignItems:'center',
+        justifyContent:'center'
+      },
+      deleteBtn:{
+        backgroundColor:"red",
+        borderRadius:4,
+        height:"100%", 
+        width:"48%", 
+        margin:2,
+        alignItems:'center',
+        justifyContent:'center'
+      }
     
     });
 

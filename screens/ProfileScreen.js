@@ -129,7 +129,7 @@ export function ProfileScreen(){
                     </View>
                     <View>
                     <Title style={styles.cardTitle}>Addresse </Title>
-                    <Caption style={{fontFamily:'Nexa-Light'}}> Cite Dakhla, 80060, Agadir</Caption>
+                    <Caption style={{fontFamily:'Nexa-Light'}}> {userData.address}</Caption>
                     </View>
                 </View>
                 <View style={styles.userInfoSection}>

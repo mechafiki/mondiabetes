@@ -1,11 +1,9 @@
 import * as React from 'react';
+import { useState , useEffect } from 'react';
 import { SafeAreaView, ActivityIndicator, ScrollView, TextInput,StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button} from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons'; 
+import { MaterialIcons , MaterialCommunityIcons , AntDesign , Ionicons } from '@expo/vector-icons'; 
 import { useFonts } from '@expo-google-fonts/inter';
 import {auth, db} from '../firebase';
 import Svg, {G, Path } from "react-native-svg";
@@ -50,19 +48,19 @@ export function DashboardScreen({ navigation }){
       };
     
     const user = auth.currentUser;
-    const [userData, setUserData] = React.useState(null);
-    const [valTest, setValTest] = React.useState("");
-    const [typeTest, setTypeTest] = React.useState(null);
-    const [hours, setHours] = React.useState("");
-    const [minutes, setMinutes] = React.useState("");
-    const [testTime, setTestTime] = React.useState("");
-    const [hydraration, setHydratation] = React.useState("");
-    const [mealName, setMealName] = React.useState("");
-    const [calories, setCalories] = React.useState("");
-    const [mealTime, setMealTime] = React.useState("");
-    const [mealHours, setMealHours] = React.useState("");
-    const [mealMinutes, setMealMinutes] = React.useState("");
-    const [description, setDescription] = React.useState("");
+    const [userData, setUserData] = useState(null);
+    const [valTest, setValTest] = useState("");
+    const [typeTest, setTypeTest] = useState(null);
+    const [hours, setHours] = useState("");
+    const [minutes, setMinutes] = useState("");
+    const [testTime, setTestTime] = useState("");
+    const [hydraration, setHydratation] = useState("");
+    const [mealName, setMealName] = useState("");
+    const [calories, setCalories] = useState("");
+    const [mealTime, setMealTime] = useState("");
+    const [mealHours, setMealHours] = useState("");
+    const [mealMinutes, setMealMinutes] = useState("");
+    const [description, setDescription] = useState("");
  
     const getUser = async() => {
         db.collection('patients').doc(user.email).get()
@@ -73,7 +71,7 @@ export function DashboardScreen({ navigation }){
         })
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
             getUser();
     }, [])
 
@@ -347,13 +345,6 @@ export function DashboardScreen({ navigation }){
                                  />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.cards}>
-                        
-                </View>
-                
-
-                <ActivityIndicator size='large' color='black'/>
-            
             </ScrollView>
             </SafeAreaView>
     );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
+import { SafeAreaView, ActivityIndicator , StyleSheet } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DashboardScreen} from '../screens/DashboardScreen';
 import { ProfileScreen} from '../screens/ProfileScreen';
@@ -7,8 +7,14 @@ import { SettingsScreen} from '../screens/SettingsScreen';
 import { SearchScreen} from '../screens/SearchScreen';
 import { DrawerContent } from '../screens/DrawerContent';
 import {GlycemieScreen} from '../screens/goals/glycemie';
+import { Meals } from '../screens/Meals';
 import {StatsScreen} from '../screens/StatsScreen';
 import {DoctorDashboard} from '../screens/doctor/DoctorDashboard';
+import { ChatScreen } from './Chat/ChatScreen';
+import { ChatScreen_patient } from './Chat/ChatScreen_patient';
+import {AddChat} from './Chat/AddChat';
+import { AddChat_patient } from './Chat/AddChat_patient';
+import { Chat } from './Chat/Chat';
 import {auth, db} from '../firebase';
 
 
@@ -40,7 +46,17 @@ export function Home({navigation}){
   }, [])
 
 
-  if ( !userData ){
+  if ( userData ){
+  return(
+    <Drawer.Navigator initialRouteName='DoctorDashboard'  drawerContent={props => <DrawerContent {...props} />} >
+      <Drawer.Screen name='DoctorDashboard' component={DoctorDashboard} />
+      <Drawer.Screen name='ChatScreen' component={ChatScreen} />
+      <Drawer.Screen name='AddChat' component={AddChat} />
+      <Drawer.Screen name="Chat" component={Chat} />
+  </Drawer.Navigator>
+  );
+}
+  else {
     return(
         <Drawer.Navigator initialRouteName='Dashboard'  drawerContent={props => <DrawerContent {...props} />} >
           <Drawer.Screen  name="Search" component={SearchScreen} />
@@ -48,19 +64,18 @@ export function Home({navigation}){
           <Drawer.Screen  name="Profile" component={ProfileScreen}  />
           <Drawer.Screen  name="Settings" component={SettingsScreen} />
           <Drawer.Screen name="Glycemie" component={GlycemieScreen}  />
+          <Drawer.Screen name="Meals" component={Meals} />
           <Drawer.Screen name="Stats" component={StatsScreen} />
+          <Drawer.Screen name='ChatScreen_patient' component={ChatScreen_patient} />
+          <Drawer.Screen name="AddChat_patient" component={AddChat_patient} />
+
+          
         </Drawer.Navigator>
       
     );
-    }
-  else {
-    return(
-      <Drawer.Navigator initialRouteName='DoctorDashboard'  drawerContent={props => <DrawerContent {...props} />} >
-        <Drawer.Screen name='DoctorDashboard' component={DoctorDashboard} />
-    </Drawer.Navigator>
-    )
   }
-  }
+
+}
 
   const styles = StyleSheet.create({
       container:{

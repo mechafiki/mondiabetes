@@ -5,20 +5,27 @@ import {auth, db} from '../firebase';
  
 export function renderItem({ item }){
   
+  console.log(item.mealName)
   return(
     <View style={styles.item}>
       <Text style={styles.itemTitle}>{item.createdAt} </Text>
       <View style={styles.cardLigne}>
-        <Text style={styles.cardText}>Temps du test : </Text>
-        <Text style={styles.cardText_}>{item.time}</Text>
+        <Text style={styles.cardText}>Nom du repas: </Text>
+        <Text style={styles.cardText_}>{item.mealName}</Text>
       </View>
       <View style={styles.cardLigne}>
-        <Text style={styles.cardText}>Type du test : </Text>
-        <Text style={styles.cardText_}>{item.typeTest}</Text>
+        <Text style={styles.cardText}>Temps : </Text>
+        <Text style={styles.cardText_}>{item.mealTime}</Text>
       </View>
-      <View  style={styles.cardLigne}>
-        <Text style={styles.cardText}>Valeur : </Text>
-        <Text style={styles.cardText_}>{item.valTest}</Text>
+      <View style={styles.cardLigne}>
+        <Text style={styles.cardText}>Calories : </Text>
+        <Text style={styles.cardText_}>{item.calories}</Text>
+      </View>
+      <View  style={styles.cardLigne_}>
+        <Text style={styles.cardText}>Description : </Text>
+        <View style={{marginLeft:10, paddingLeft: 10 , borderLeftWidth:.3, borderLeftColor:"#333",justifyContent:'center',paddingTop:5}}>
+            <Text style={styles.cardText_}>{item.description}</Text>
+        </View>
       </View>
     
       <View style={{position:'absolute', bottom:5,right:5}}>
@@ -34,7 +41,7 @@ export function Item ({ title}){
   const user = auth.currentUser;
   const [userData, setUserData] = React.useState("");
   const getUser = async() => {
-    db.collection('users').doc(user.email).collection('glycemicTests').doc().get()
+    db.collection('patients').doc(user.email).collection('meals').doc().get()
     .then((documentSnapshot) => {
       if (documentSnapshot.exists) {
       //  console.log('here');
@@ -49,13 +56,12 @@ export function Item ({ title}){
   return(
         
   <View style={styles.item}>
-    <Text style={styles.itemTitle}>{title}{userData.time}  </Text>
   </View>
 );
 }
 
 
-export function GlycemicTests({navigation}){
+export function Meals({navigation}){
     const user = auth.currentUser;
     const [DATA, setDATA] = React.useState(null);
     const [loading , setLoading] = React.useState(true);
@@ -66,22 +72,22 @@ export function GlycemicTests({navigation}){
         const fetchTests = async() => {
             if (!DATA){
                 const list = []; 
-                await db.collection('patients').doc(user.email).collection('glycemicTests').get()
+                await db.collection('patients').doc(user.email).collection('meals').get()
                 .then((querySnapchot) => {
                     querySnapchot.forEach(doc => {
-                    const { id, typeTest ,createdAt, testTime, valTest} = doc.data();
-                    console.log("DOC : ",  doc)
+                    const { id, calories , createdAt , description, mealName , mealTime} = doc.data();
                       list.push({
                           id: id,
-                          typeTest:typeTest,
-                          valTest:valTest,
-                          createdAt:createdAt,
-                          time:testTime,
+                          calories : calories,
+                          createdAt: createdAt,
+                          description: description,
+                          mealName: mealName,
+                          mealTime:mealTime,
                       })
                   });
                 })
                 setDATA(list);
-                console.log(DATA);
+                console.log(list);
                if(loading){
                    setLoading(false);
                }
@@ -98,7 +104,7 @@ export function GlycemicTests({navigation}){
                 <Ionicons name="arrow-back-outline" size={24} color="white" />
                 </TouchableOpacity>
                 <View style={styles.title}>
-                    <Text style={{color:'white', fontFamily:'Nexa-Light', fontSize:20}}>Historique des tests</Text>
+                    <Text style={{color:'white', fontFamily:'Nexa-Light', fontSize:20}}>Historique des repas</Text>
     
                 </View>
             </View>
@@ -144,7 +150,6 @@ export function GlycemicTests({navigation}){
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
-        height:100
       },
       itemTitle: {
         fontSize: 14,
@@ -156,6 +161,9 @@ export function GlycemicTests({navigation}){
       },
       cardLigne:{
         flexDirection:'row' , 
+        marginTop:3
+      },
+      cardLigne_:{
         marginTop:3
       },
       cardText:{

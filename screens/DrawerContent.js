@@ -147,7 +147,8 @@ export function DrawerContent(props){
                                         color:"#000c66",
                                         fontFamily:'Marta-Regular'
                                 }}
-                                onPress={() => {props.navigation.navigate('Stats')}}
+
+                                //onPress={() => {props.navigation.navigate('PatientsStats')}}
                             />
                         }
                         {
@@ -155,16 +156,17 @@ export function DrawerContent(props){
                             ?
                             <DrawerItem 
                                 icon={() => (
-                                    <Fontisto 
-                                    name="doctor" 
+                                    <Entypo 
+                                    name="chat" 
                                     size={24} 
                                     color="#000c66" />
                                 )}
-                                label="Contacter votre médecin"
+                                label="Chat"
                                 labelStyle={{
                                         color:"#000c66",
                                         fontFamily:'Marta-Regular'
                                 }}
+                                onPress={() => {props.navigation.navigate('ChatScreen_patient')}}
                             />
                             :
                             <DrawerItem 
@@ -179,6 +181,7 @@ export function DrawerContent(props){
                                         color:"#000c66",
                                         fontFamily:'Marta-Regular'
                                 }}
+                                onPress={() => {props.navigation.navigate('ChatScreen')}}
                             />
                         }
                         {

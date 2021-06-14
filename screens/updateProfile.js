@@ -61,6 +61,8 @@ export function updateProfile({ navigation }){
         GSM:userData.GSM,
         diabetesType:userData.diabetesType,
         profilePic:userData.profilePic,
+        size:userData.size,
+        weight:userData.weight,
       })
       user.updateEmail(userData.email)
       .catch(error => {

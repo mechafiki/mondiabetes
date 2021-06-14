@@ -83,7 +83,6 @@ export function PatientSignUp({ navigation }){
 
         auth.createUserWithEmailAndPassword(email, password)
         .then(() => {
-          
           db.collection('patients').doc(auth.currentUser.email).set({
                 accountType: 'patient',
                 displayName: name,

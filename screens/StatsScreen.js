@@ -96,7 +96,7 @@ export function StatsHomeScreen({ navigation }) {
               animation="bounceInUp" 
               iterationCount={1}
               direction="alternate">
-              <TouchableOpacity style={styles.cards}>
+              <TouchableOpacity style={styles.cards} onPress={()=> navigation.navigate('Meals')}>
                    <Text style={styles.cardText}>Historique des repas</Text>
                    <View style={{ zIndex: 999}}><MaterialCommunityIcons name="food" size={36} color="#fff" /></View>
                    <View style={styles.shape}><Text></Text></View>
