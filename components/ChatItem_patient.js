@@ -1,16 +1,14 @@
 import * as React from 'react';
-import {StyleSheet } from 'react-native';
 import {useState , useEffect} from 'react';
 import { Avatar, ListItem } from 'react-native-elements';
 import {db } from '../firebase';
 
-export function ChatItem_patient({ id , chatName , displayName, enterChat }){
+export function ChatItem_patient({ id , doctor , chatName, displayName, enterChat }){
 
     const [userData, setUserData] = useState("");
     const getUser = async() => {
-      db.collection('doctors').doc(chatName.toLowerCase()).get()
+      db.collection('doctors').doc(doctor.toLowerCase()).get()
       .then((documentSnapshot) => {
-          
         if (documentSnapshot.exists) {
           setUserData(documentSnapshot.data()); 
         }
@@ -21,7 +19,7 @@ export function ChatItem_patient({ id , chatName , displayName, enterChat }){
       getUser();
     }, []);
     return(
-        <ListItem>
+        <ListItem  key={id}  onPress={()=> enterChat(id , doctor, displayName ,chatName)} >
             {
                 userData.profilePic
                 ?
@@ -56,7 +54,3 @@ export function ChatItem_patient({ id , chatName , displayName, enterChat }){
         </ListItem>
     );
 }
-
-const styles = StyleSheet.create({
-
-}) ;

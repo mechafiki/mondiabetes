@@ -41,7 +41,7 @@ export function ProfileScreen(){
     const user = auth.currentUser;
     const [userData, setUserData] = React.useState("");
     const getUser = async() => {
-        db.collection('patients').doc(user.email).get()
+        await db.collection('patients').doc(user.email).get()
         .then((documentSnapchot) => {
             if ( documentSnapchot.exists){
                 setUserData(documentSnapchot.data());

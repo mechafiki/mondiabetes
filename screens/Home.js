@@ -15,6 +15,7 @@ import { ChatScreen_patient } from './Chat/ChatScreen_patient';
 import {AddChat} from './Chat/AddChat';
 import { AddChat_patient } from './Chat/AddChat_patient';
 import { Chat } from './Chat/Chat';
+import { Chat_patient } from './Chat/Chat_patient';
 import {auth, db} from '../firebase';
 
 
@@ -67,6 +68,7 @@ export function Home({navigation}){
           <Drawer.Screen name="Meals" component={Meals} />
           <Drawer.Screen name="Stats" component={StatsScreen} />
           <Drawer.Screen name='ChatScreen_patient' component={ChatScreen_patient} />
+          <Drawer.Screen name='Chat_patient' component={Chat_patient} />
           <Drawer.Screen name="AddChat_patient" component={AddChat_patient} />
 
           

@@ -42,6 +42,17 @@ export function ChatScreen_patient({navigation}){
          })
     }, [])
 
+    const enterChat = (id, doctor , displayName ,chatName ) => {
+        navigation.navigate('Chat_patient', {
+            id, 
+            doctor,
+            displayName,
+            chatName
+            
+        })
+        console.log(displayName)
+}
+
     return(
         <SafeAreaView style={styles.container}>
             <TouchableOpacity style={styles.addChat} activeOpacity={.6} onPress={() => navigation.navigate('AddChat_patient')} >
@@ -68,7 +79,7 @@ export function ChatScreen_patient({navigation}){
                     size="medium"
                     rounded
                     source={{
-                        uri : "https://image.freepik.com/free-photo/cheerful-curly-business-girl-wearing-glasses_176420-206.jpg",
+                        uri : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmicrobiology.ucr.edu%2Fimage%2Fprofile-image-placeholder&psig=AOvVaw2zkM0xBgPptK52hr9cWW37&ust=1623758871757000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNCXqq6Ll_ECFQAAAAAdAAAAABAE",
                     }}
                     />
                     
@@ -78,8 +89,15 @@ export function ChatScreen_patient({navigation}){
                 </View>
             </View>
             <ScrollView contentContainerStyle={{zIndex:999, flex:1, backgroundColor:"#f8faff"}}>
-                    {chats.map(({id, data:{chatName , displayName}}) => (
-                        <ChatItem_patient key={id}  id={id} chatName={chatName} displayName={displayName}/>
+                    {chats.map(({id, data:{doctor , displayName, chatName}}) => (
+                        <ChatItem_patient 
+                        key={id}  
+                        id={id} 
+                        doctor={doctor} 
+                        displayName={displayName}
+                        chatName={chatName}
+                        enterChat={enterChat}
+                        />
                     ))}
             </ScrollView>
         </SafeAreaView>

@@ -82,7 +82,10 @@ export function PatientSignUp({ navigation }){
       else{
 
         auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
+        .then((authUser) => {
+            authUser.user.updateProfile({
+                displayName: name,
+            })
           db.collection('patients').doc(auth.currentUser.email).set({
                 accountType: 'patient',
                 displayName: name,
@@ -211,6 +214,7 @@ export function PatientSignUp({ navigation }){
           <TextInput  
           style={styles.inputText}
           placeholder="GSM "
+          keyboardType="numeric"
           type="text"
           value={phone}
           onChangeText={(text) => setPhone(text)}

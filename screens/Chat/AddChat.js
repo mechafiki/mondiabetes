@@ -51,12 +51,15 @@ export function renderItem({ item }){
               })
               .then(()=>{
                 db.collection('doctors').doc(user.email).collection('chats').doc(item.email).set({
-                    chatName:item.email,
-                    displayName:item.name,
+                   chatName:chatName,
+                   patient:item.email,
+                   displayName:item.name,
                     
                 })
                 db.collection('patients').doc(item.email.toLocaleLowerCase()).collection('chats').doc(user.email).set({
-                  chatName:user.email,
+                  chatName:chatName,
+                  doctor:user.email,
+                  displayName: user.displayName,
                 })
                 .then(()=>{
                   alert("Chat créé")

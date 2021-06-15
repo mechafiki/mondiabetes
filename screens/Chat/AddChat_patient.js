@@ -31,7 +31,7 @@ export function Item ({ title}){
   );
   }
 
-export function renderItem({ item , userData , navigation}){
+export function renderItem({ item }){
 
     const user = auth.currentUser;    
     const startChat = async() => {
@@ -46,15 +46,18 @@ export function renderItem({ item , userData , navigation}){
               db.collection('chats').doc(chatName).set({
                   chatName:chatName,
                   doctor: item.email,
-                  patient:user.email,
+                  patient:user.email.toLocaleLowerCase(),
               })
               .then(()=>{
                 db.collection('patients').doc(user.email.toLowerCase()).collection('chats').doc(item.email.toLowerCase()).set({
-                    chatName:item.email,
+                    chatName:chatName,
+                    doctor:item.email,
+                    displayName:item.name                    
                 })
                 db.collection('doctors').doc(item.email.toLowerCase()).collection('chats').doc(user.email.toLowerCase()).set({
-                  chatName:user.email,
-                  
+                  chatName:chatName,
+                  patient:user.email,
+                  displayName:user.displayName,
                 })
                 .then(()=>{
                   alert("Chat créé")

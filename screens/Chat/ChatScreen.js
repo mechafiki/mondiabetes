@@ -17,7 +17,7 @@ export function ChatScreen({navigation}){
     const [chats , setChats] = useState([]);
 
     useEffect(()=> {
-         const unsubscribe = db.collection('doctors').doc(user.email).collection('chats').onSnapshot((snapshot) => {
+        const unsubscribe = db.collection('doctors').doc(user.email).collection('chats').onSnapshot((snapshot) => {
              setChats(
                  snapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -25,13 +25,16 @@ export function ChatScreen({navigation}){
                  }))
              )
          })
+
     }, []);
 
-    const enterChat = (id, chatName , displayName) => {
+    const enterChat = (id, patient , displayName ,chatName ) => {
             navigation.navigate('Chat', {
                 id, 
-                chatName,
+                patient,
                 displayName,
+                chatName
+                
             })
     }
 
@@ -57,8 +60,14 @@ export function ChatScreen({navigation}){
                 </View>
             </View>
             <ScrollView contentContainerStyle={{zIndex:999, flex:1, backgroundColor:"#f8faff"}}>
-                    {chats.map(({id, data:{chatName , displayName}}) => (
-                        <ChatItem key={id}  id={id} chatName={chatName} displayName={displayName} enterChat={enterChat}/>
+                    {chats.map(({id, data:{patient , displayName, chatName}} ) => (
+                        <ChatItem 
+                        key={id}  
+                        id={id} 
+                        patient={patient} 
+                        displayName={displayName} 
+                        chatName={chatName}
+                        enterChat={enterChat}/>
                     ))}
             </ScrollView>
         </SafeAreaView>

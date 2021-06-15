@@ -104,7 +104,6 @@ export function DoctorDashboard({ navigation }){
       const [loading , setLoading] = useState(true);
 
       const getUser = async() => {
-        console.log(user.email)
           db.collection('doctors').doc(user.email).get()
           .then((documentSnapchot) => {
               if ( documentSnapchot.exists){

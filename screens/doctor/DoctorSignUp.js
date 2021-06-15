@@ -67,8 +67,10 @@ export function DoctorSignUp({ navigation }){
       else{
 
         auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          
+        .then((authUser) => {
+            authUser.user.updateProfile({
+                displayName: name,
+            })
           db.collection('doctors').doc(auth.currentUser.email).set({
                 accountType:'doctor',
                 gender:gender,

@@ -8,26 +8,26 @@ import * as firebase from "firebase";
 import { auth , db} from '../../firebase'; 
 import { Keyboard } from 'react-native';
 
-export function Chat({ navigation , route }){
+export function Chat_patient({ navigation , route }){
 
     const [input , setInput] = useState("");
     const [messages, setMessages] = useState([]);
     const user = auth.currentUser;
     const [userData, setUserData] = useState("");
-    const [patientData, setPatientData] = useState("");
+    const [doctorData, setDoctorData] = useState("");
     const getUser = async() => {
-      db.collection('doctors').doc(user.email).get()
+      db.collection('patients').doc(user.email).get()
       .then((documentSnapshot) => {
         if (documentSnapshot.exists) {
           setUserData(documentSnapshot.data()); 
         }
-      })
-      db.collection('patients').doc(route.params.patient.toLocaleLowerCase()).get()
+      }) 
+      db.collection('doctors').doc(route.params.doctor).get()
       .then((documentSnapshot) => {
         if (documentSnapshot.exists) {
-          setPatientData(documentSnapshot.data()); 
+          setDoctorData(documentSnapshot.data()); 
         }
-      })        
+      })    
     }
     useEffect(() => {
       getUser();
@@ -35,6 +35,7 @@ export function Chat({ navigation , route }){
 
     const send = () => {
         Keyboard.dismiss();
+      //  console.log(route.params.chatName)
         db.collection('chats').doc(route.params.chatName).collection('messages').add({
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             message:input,
@@ -75,14 +76,11 @@ export function Chat({ navigation , route }){
                     rounded
                     source={{
     
-                        uri :   patientData.profilePic ? patientData.profilePic : "https://i.pravatar.cc/300",
+                        uri : doctorData.profilePic? doctorData.profilePic :  "https://media.istockphoto.com/vectors/doctor-icon-design-vector-id1163876251?k=6&m=1163876251&s=612x612&w=0&h=527Miz8LCLPbxREMx2Zs-xMyviI-RI8lJIMwqFa-3-U=",
                     }}
                 />
                 </View>
-
-                <Text style={{fontFamily:'Nexa-Bold',color:'#fff',fontSize:16}} >{patientData.displayName}</Text>
-                   
-                
+                <Text style={{fontFamily:'Nexa-Bold',color:'#fff'}} >Dr. {route.params.displayName}</Text>
             </View>
             <KeyboardAvoidingView 
                 behavior={Platform.OS === 'ios' ? "padding" : "height"}
@@ -93,40 +91,31 @@ export function Chat({ navigation , route }){
                 <ScrollView contentContainerStyle={{}}>
                     {messages.map(({id , data}) => (
                         data.email === userData.email ?  (
-                            
                             <Animatable.View 
                             key={id} 
                             style={styles.sender}
                             animation="fadeInLeft"
                             >
-                            <Avatar 
-                                rounded
-                                source={{
-                
-                                    uri :  userData.profilePic ? userData.profilePic :  "https://media.istockphoto.com/vectors/doctor-icon-design-vector-id1163876251?k=6&m=1163876251&s=612x612&w=0&h=527Miz8LCLPbxREMx2Zs-xMyviI-RI8lJIMwqFa-3-U=",
-                                }}
-                            />
-                            <View style={styles.sendermsg}>                            
-                                    <Text style={{color:"#fff", fontFamily:'Nexa-Light'}}>{data.message}</Text>                              
-                            </View>
+                                <Avatar 
+                                    rounded
+                                    source={{uri : userData.profilePic? userData.profilePic : "https://microbiology.ucr.edu/sites/g/files/rcwecm2866/files/styles/form_preview/public/blank-profile-pic.png?itok=xMM7pLfb"}}
+                                />
+                                <View style={styles.sendermsg}>
+                                    <Text style={{color:"#fff", fontFamily:'Nexa-Light'}}>{data.message}</Text>
+                                </View>
                             </Animatable.View>
                         )
                         :
                         (
-                            <Animatable.View 
-                            key={id}  
-                            style={styles.receiver}
-                            animation="fadeInRight"
+                            <Animatable.View key={id}
+                                style={styles.receiver}
                             >
-                            <Avatar 
-                                rounded
-                                source={{
-                
-                                    uri :   patientData.profilePic ? patientData.profilePic : "https://i.pravatar.cc/300",
-                                }}
-                            />
+                                <Avatar
+                                    rounded
+                                    source={{uri :   "https://media.istockphoto.com/vectors/doctor-icon-design-vector-id1163876251?k=6&m=1163876251&s=612x612&w=0&h=527Miz8LCLPbxREMx2Zs-xMyviI-RI8lJIMwqFa-3-U=",}}
+                                />
                                 <View style={styles.receivermsg}>
-                                    <Text style={{color:"#000", fontFamily:'Nexa-Light'}}>{data.message}</Text>
+                                    <Text style={{color:"#000", fontFamily:'Nexa-Light', fontSize:16}}>{data.message}</Text>
                                 </View>
                             </Animatable.View>
                         )
@@ -154,7 +143,7 @@ export function Chat({ navigation , route }){
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:'#f8faff'
+        backgroundColor:'#fff'
     },
     header:{
         backgroundColor:'#5f99ea',
@@ -181,7 +170,7 @@ const styles = StyleSheet.create({
         flex:1,
         marginRight:15,
         borderColor:'transparent',
-        backgroundColor:"#fff",
+        backgroundColor:"#ececec",
         padding:10,
         color:'grey',
         borderRadius: 20
