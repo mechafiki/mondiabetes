@@ -1,34 +1,20 @@
 import React from 'react';
-import { SafeAreaView, View, FlatList,TouchableOpacity, StyleSheet, Text, ActivityIndicator} from 'react-native';
+import { SafeAreaView, View, FlatList,TouchableOpacity, StyleSheet, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import {auth, db} from '../firebase';
  
 export function renderItem({ item }){
   
-  console.log(item.mealName)
+ // console.log(item.mealName)
   return(
     <View style={styles.item}>
       <Text style={styles.itemTitle}>{item.createdAt} </Text>
       <View style={styles.cardLigne}>
-        <Text style={styles.cardText}>Nom du repas: </Text>
-        <Text style={styles.cardText_}>{item.mealName}</Text>
+        <Text style={styles.cardText}>Hydratation du jour: </Text>
+        <Text style={styles.cardText_}>{item.hydratation}</Text>
+        <Text style={styles.cardText}>Litres </Text>
       </View>
-      <View style={styles.cardLigne}>
-        <Text style={styles.cardText}>Temps : </Text>
-        <Text style={styles.cardText_}>{item.mealTime}</Text>
-      </View>
-      <View style={styles.cardLigne}>
-        <Text style={styles.cardText}>Calories : </Text>
-        <Text style={styles.cardText_}>{item.calories}</Text>
-        <Text style={styles.cardText}> Kcal</Text>
-      </View>
-      <View  style={styles.cardLigne_}>
-        <Text style={styles.cardText}>Description : </Text>
-        <View style={{marginLeft:10, paddingLeft: 10 , borderLeftWidth:.3, borderLeftColor:"#333",justifyContent:'center',paddingTop:5}}>
-            <Text style={styles.cardText_}>{item.description}</Text>
-        </View>
-      </View>
-    
+      
       <View style={{position:'absolute', bottom:5,right:5}}>
 
       </View>
@@ -42,7 +28,7 @@ export function Item ({ title}){
   const user = auth.currentUser;
   const [userData, setUserData] = React.useState("");
   const getUser = async() => {
-    db.collection('patients').doc(user.email).collection('meals').doc().get()
+    db.collection('patients').doc(user.email).collection('hydratation').doc().get()
     .then((documentSnapshot) => {
       if (documentSnapshot.exists) {
       //  console.log('here');
@@ -62,7 +48,7 @@ export function Item ({ title}){
 }
 
 
-export function Meals({navigation}){
+export function Hydratation({navigation}){
     const user = auth.currentUser;
     const [DATA, setDATA] = React.useState(null);
     const [loading , setLoading] = React.useState(true);
@@ -73,17 +59,14 @@ export function Meals({navigation}){
         const fetchTests = async() => {
             if (!DATA){
                 const list = []; 
-                await db.collection('patients').doc(user.email).collection('meals').get()
+                await db.collection('patients').doc(user.email).collection('hydratation').get()
                 .then((querySnapchot) => {
                     querySnapchot.forEach(doc => {
-                    const { id, calories , createdAt , description, mealName , mealTime} = doc.data();
+                    const { id , createdAt ,hydratation} = doc.data();
                       list.push({
                           id: id,
-                          calories : calories,
                           createdAt: createdAt,
-                          description: description,
-                          mealName: mealName,
-                          mealTime:mealTime,
+                          hydratation : hydratation
                       })
                   });
                 })
@@ -105,7 +88,7 @@ export function Meals({navigation}){
                 <Ionicons name="arrow-back-outline" size={24} color="white" />
                 </TouchableOpacity>
                 <View style={styles.title}>
-                    <Text style={{color:'white', fontFamily:'Nexa-Light', fontSize:20}}>Historique des repas</Text>
+                    <Text style={{color:'white', fontFamily:'Nexa-Light', fontSize:20}}>Historique de l'hydratation</Text>
     
                 </View>
             </View>

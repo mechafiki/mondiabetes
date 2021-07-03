@@ -8,6 +8,7 @@ import { SearchScreen} from '../screens/SearchScreen';
 import { DrawerContent } from '../screens/DrawerContent';
 import {GlycemieScreen} from '../screens/goals/glycemie';
 import { Meals } from '../screens/Meals';
+import { Hydratation } from './Hydratation';
 import {StatsScreen} from '../screens/StatsScreen';
 import {DoctorDashboard} from '../screens/doctor/DoctorDashboard';
 import { ChatScreen } from './Chat/ChatScreen';
@@ -66,6 +67,7 @@ export function Home({navigation}){
           <Drawer.Screen  name="Settings" component={SettingsScreen} />
           <Drawer.Screen name="Glycemie" component={GlycemieScreen}  />
           <Drawer.Screen name="Meals" component={Meals} />
+          <Drawer.Screen name="Hydratation" component={Hydratation} />
           <Drawer.Screen name="Stats" component={StatsScreen} />
           <Drawer.Screen name='ChatScreen_patient' component={ChatScreen_patient} />
           <Drawer.Screen name='Chat_patient' component={Chat_patient} />

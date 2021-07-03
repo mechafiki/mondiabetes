@@ -54,7 +54,7 @@ export function DashboardScreen({ navigation }){
     const [hours, setHours] = useState("");
     const [minutes, setMinutes] = useState("");
     const [testTime, setTestTime] = useState("");
-    const [hydraration, setHydratation] = useState("");
+    const [hydratation, setHydratation] = useState("");
     const [mealName, setMealName] = useState("");
     const [calories, setCalories] = useState("");
     const [mealTime, setMealTime] = useState("");
@@ -156,7 +156,7 @@ export function DashboardScreen({ navigation }){
 
 
     const submitHydratation = async() => {
-      const parsedH = Number.parseInt(hydraration, 10 );
+      const parsedH = Number.parseInt(hydratation, 10 );
       if (isNaN(parsedH)  ) {
         alert("les données n'ont pas été entrés correctement"); 
       }
@@ -167,9 +167,9 @@ export function DashboardScreen({ navigation }){
         alert("La valeur est grande , veuillez vérifier vos informations");
     }
       else {
-        db.collection('patients').doc(user.email).collection('hydraration').add({
+        db.collection('patients').doc(user.email).collection('hydratation').add({
           id:Math.random().toString(36).substring(7),
-          hydraration : parsedH ,
+          hydratation : parsedH ,
           createdAt:  new Date().toDateString(),
       })
       .then( alert('succès'))
@@ -264,7 +264,7 @@ export function DashboardScreen({ navigation }){
                         <TextInput style={styles.input}
                             placeholder="Entrez la valeur"
                             keyboardType='numeric'
-                            value={hydraration}
+                            value={hydratation}
                             onChangeText={(value) => setHydratation(value)}
                         />  
                         <TouchableOpacity style={{justifyContent:'center',alignItems:'center',width:"100%",height:40,marginTop:5,flexDirection:'row'}} onPress={submitHydratation}  >

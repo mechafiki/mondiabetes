@@ -66,8 +66,8 @@ export function StatsHomeScreen({ navigation }) {
           <Text style={styles.title}>Historique</Text>
         </View>
         <View style={{position:'absolute',top:0,right:0,zIndex:999}}><SvgComponent /></View>
-          <Animatable.View 
-              style={{width:'90%', marginTop:40}}
+          <Animatable.View
+              style={{width:'90%', marginTop:160}}
               animation="bounceInUp"
               iterationCount={1}
               direction="alternate">
@@ -99,6 +99,17 @@ export function StatsHomeScreen({ navigation }) {
               <TouchableOpacity style={styles.cards} onPress={()=> navigation.navigate('Meals')}>
                    <Text style={styles.cardText}>Historique des repas</Text>
                    <View style={{ zIndex: 999}}><MaterialCommunityIcons name="food" size={36} color="#fff" /></View>
+                   <View style={styles.shape}><Text></Text></View>
+              </TouchableOpacity>
+          </Animatable.View>
+          <Animatable.View 
+              style={{width:'90%'}}
+              animation="bounceInUp" 
+              iterationCount={1}
+              direction="alternate">
+              <TouchableOpacity style={styles.cards} onPress={()=> navigation.navigate('Hydratation')}>
+                   <Text style={styles.cardText}>Historique de l'hydratation</Text>
+                   <View style={{ zIndex: 999}}><MaterialCommunityIcons name="water" size={36} color="#fff" /></View>
                    <View style={styles.shape}><Text></Text></View>
               </TouchableOpacity>
           </Animatable.View> 
