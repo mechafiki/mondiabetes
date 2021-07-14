@@ -48,7 +48,6 @@ export function ChatItem_patient({ id , doctor , chatName, displayName, enterCha
                     numberOfLines={1}
                     ellipsizeMode="tail"    
                 >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula a ornare scelerisque. Cras faucibus lorem ut lectus ultrices vestibulum. Aliquam erat volutpat. 
                 </ListItem.Subtitle>
             </ListItem.Content>
         </ListItem>

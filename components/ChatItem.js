@@ -41,7 +41,7 @@ export function ChatItem({ id , patient , displayName ,chatName, enterChat }){
                 />
 
             }
-            <ListItem.Content>
+            <ListItem.Content style={{justifyContent:'center'}}>
                 <ListItem.Title style={{fontFamily:'Nexa-Bold'}}>
                      {userData.displayName}
                 </ListItem.Title>
@@ -49,7 +49,6 @@ export function ChatItem({ id , patient , displayName ,chatName, enterChat }){
                     numberOfLines={1}
                     ellipsizeMode="tail"    
                 >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula a ornare scelerisque. Cras faucibus lorem ut lectus ultrices vestibulum. Aliquam erat volutpat. 
                 </ListItem.Subtitle>
             </ListItem.Content>
         </ListItem>

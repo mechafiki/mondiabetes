@@ -196,8 +196,7 @@ export function DoctorDashboard({ navigation }){
 
 
       return(
-          <SafeAreaView  style={{flex:1, backgroundColor:"#fff"}} >      
-              <ScrollView contentContainerStyle={styles.container}>
+          <SafeAreaView  style={styles.container} >      
               <View style={{position:'absolute',top:0,right:0,zIndex:999}}><SvgComponent /></View>
               <TriangleCorner />
               <View style={styles.headerTitle}>
@@ -248,16 +247,7 @@ export function DoctorDashboard({ navigation }){
                       renderItem={renderItem}
                       keyExtractor={item => item.id}
                       />
-              </View>
-              <View style={styles.cards}>
-
-              </View>
-                  
-                  
-
-                  <ActivityIndicator size='large' color='black'/>
-              
-              </ScrollView>
+              </View>             
               </SafeAreaView>
       );
   }
@@ -265,6 +255,8 @@ export function DoctorDashboard({ navigation }){
 
 const styles = StyleSheet.create({
     container: {
+        flex:1, 
+        backgroundColor:"#fff",
         width:"100%",
         alignItems: 'center',
         justifyContent: 'center',
