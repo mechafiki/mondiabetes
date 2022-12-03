@@ -61,7 +61,7 @@ Allows to give an architecture to the software by giving the definition of the i
 - @react-native-web
 
 ### 2.7. Screenshots from the application
-![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Screenshot1.png?raw=true "Landing Page")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Screenshot1.png "Landing Page")
 ![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Screenshot2.png "Login")
 ![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Screenshot3.png "Dashboard for patient")
 ![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Screenshot4.png "Profile Page")
