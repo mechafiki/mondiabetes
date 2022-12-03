@@ -1,8 +1,10 @@
  # MonDiabetes
 An open-source non-deployed mobile application for monitoring diabetics built using React Native and Firebase
 
->  `Created by : Mohamed El Amine Chafiki & Ouijdan Addou
+  `Created by : Mohamed El Amine Chafiki & Ouijdan Addou
 `
+> Purpose : End of Study (Bachelor) Project
+
 ## 1. Why did we create this application ?
 
 For monitoring diabetes, the patient needs to make an appointment to see the doctor. And the latter himself has difficulties in monitoring and communicating with his patients. For this, we have created this mobile application which will fix the following problems:
