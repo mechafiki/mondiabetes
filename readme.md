@@ -1,7 +1,7 @@
-> # MonDiabetes
+ # MonDiabetes
 An open-source non-deployed mobile application for monitoring diabetics built using React Native and Firebase
 
-> `Created by : Mohamed El Amine Chafiki & Ouijdan Addou
+>  `Created by : Mohamed El Amine Chafiki & Ouijdan Addou
 `
 ## 1. Why did we create this application ?
 
@@ -42,6 +42,8 @@ Allows to give an architecture to the software by giving the definition of the i
 - Expo
 - Firebase
 
+<!--more-->
+
 ### 2.6. Dependencies
 - @expo-google-fonts/inter 
 - @react-native-community/slider
@@ -58,9 +60,4 @@ Allows to give an architecture to the software by giving the definition of the i
 ## 3. Conclusion
 A Description of the project framework and design method UML events are used as a modeling language. We then established a preliminary study to identify the different participants to interact with the system to be produced, then standardize the functional requirements via use case diagrams and a requirements analysis using sequence diagrams once the function of the determined system, we introduce the design of our application. Concretely, the class diagram, then the database obtained by applying the rules for transferring class diagrams to the relational model.
 
-Finally, the mobile development tools and languages we used to implement our application
-
-
-
-
-
+**Finally, the mobile development tools and languages we used to implement our application**
