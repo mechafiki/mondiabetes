@@ -1,8 +1,9 @@
  # MonDiabetes
 An open-source non-deployed mobile application for monitoring diabetics built using React Native and Firebase
 
-  `Created by : Mohamed El Amine Chafiki & Ouijdan Addou
+  `The application was made in french language
 `
+> Created by : Mohamed El Amine Chafiki & Ouijdan Addou
 > Purpose : End of Study (Bachelor) Project
 
 ## 1. Why did we create this application ?
