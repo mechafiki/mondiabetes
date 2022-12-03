@@ -61,15 +61,15 @@ Allows to give an architecture to the software by giving the definition of the i
 - @react-native-web
 
 ### 2.7. Screenshots from the application
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture1.png "Landing Page")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture2.png "Login")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture3.png "Dashboard for patient")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture4.png "Profile Page")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture5.png "Where you set your objectives")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture6.png "Patient History")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture7.png "Drawer")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture8.png "Dashboard for Doctor")
-![Screenshot](https://github.com/mechafiki/mondiabetes/blob/main/screenshots/Architecture9.png "Chat")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture1.png "Landing Page")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture2.png "Login")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture3.png "Dashboard for patient")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture4.png "Profile Page")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture5.png "Where you set your objectives")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture6.png "Patient History")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture7.png "Drawer")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture8.png "Dashboard for Doctor")
+![Screenshot](https://github.com/mechafiki/mondiabetes/tree/main/screenshots/Architecture9.png "Chat")
 
 ## 3. Conclusion
 A Description of the project framework and design method UML events are used as a modeling language. We then established a preliminary study to identify the different participants to interact with the system to be produced, then standardize the functional requirements via use case diagrams and a requirements analysis using sequence diagrams once the function of the determined system, we introduce the design of our application. Concretely, the class diagram, then the database obtained by applying the rules for transferring class diagrams to the relational model.
